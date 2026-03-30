@@ -22,13 +22,36 @@ cuts/
 # Panel crops and any future ref/ folders
 panels/
 
-# Raw chapter scans (keep stage_*.md etc.); supports Frierien-chapter### or similar
+# Raw chapter scans (keep stage_*.md etc.)
+# — Frierien-chapter*, Chapter-*, chNNN, etc.
 Frierien-chapter*/**/*.jpg
 Frierien-chapter*/**/*.jpeg
 Frierien-chapter*/**/*.JPG
 Frierien-chapter*/**/*.JPEG
 Frierien-chapter*/**/*.png
 Frierien-chapter*/**/*.webp
+Chapter-*/**/*.jpg
+Chapter-*/**/*.jpeg
+Chapter-*/**/*.JPG
+Chapter-*/**/*.JPEG
+Chapter-*/**/*.png
+Chapter-*/**/*.webp
+chapter-*/**/*.jpg
+chapter-*/**/*.jpeg
+chapter-*/**/*.JPG
+chapter-*/**/*.JPEG
+chapter-*/**/*.png
+chapter-*/**/*.webp
+ch[0-9][0-9][0-9]/**/*.jpg
+ch[0-9][0-9][0-9]/**/*.jpeg
+ch[0-9][0-9][0-9]/**/*.JPG
+ch[0-9][0-9][0-9]/**/*.JPEG
+ch[0-9][0-9][0-9]/**/*.png
+ch[0-9][0-9][0-9]/**/*.webp
+
+# Drop folders for ad-hoc sources (any image → animation)
+inputs/
+sources/
 
 # Stray page dumps at repo root
 /*.jpg
@@ -38,11 +61,14 @@ Frierien-chapter*/**/*.webp
 /*.png
 /*.webp
 
-# Videos (if saved outside outputs/)
+# Videos / animated intermediates (if saved outside outputs/)
 *.mp4
 *.webm
 *.mov
 *.mkv
+*.m4v
+*.avi
+*.gif
 
 # =============================================================================
 # Python
