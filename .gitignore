@@ -10,13 +10,39 @@
 # =============================================================================
 outputs/
 
-# Test renders: keep approved **Tests/Final/** only; ignore iterations + old
-Tests/**
-!Tests/Final/
-!Tests/Final/**
+# Stills, iterations, approved Final — all local-only (use --start-image / --ref for I2V)
+Tests/
 
 # Timeline / scratch exports (if present)
 cuts/
+
+# =============================================================================
+# Media — manga sources, crops, renders (generic image→animation workflow)
+# =============================================================================
+# Panel crops and any future ref/ folders
+panels/
+
+# Raw chapter scans (keep stage_*.md etc.); supports Frierien-chapter### or similar
+Frierien-chapter*/**/*.jpg
+Frierien-chapter*/**/*.jpeg
+Frierien-chapter*/**/*.JPG
+Frierien-chapter*/**/*.JPEG
+Frierien-chapter*/**/*.png
+Frierien-chapter*/**/*.webp
+
+# Stray page dumps at repo root
+/*.jpg
+/*.jpeg
+/*.JPG
+/*.JPEG
+/*.png
+/*.webp
+
+# Videos (if saved outside outputs/)
+*.mp4
+*.webm
+*.mov
+*.mkv
 
 # =============================================================================
 # Python
@@ -54,9 +80,3 @@ Desktop.ini
 *.swo
 *~
 
-# =============================================================================
-# Optional: uncomment if raw chapter scans are too large or must not leave disk
-# (Scripts default to paths under Frierien-chapter081/ and panels/)
-# =============================================================================
-# Frierien-chapter081/*.jpg
-# /002.jpg
