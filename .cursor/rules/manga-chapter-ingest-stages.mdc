@@ -1,0 +1,10 @@
+---
+description: When ingesting or editing Stages 1–3 for a manga chapter (page order, RTL panels, beats, shot list, characters on-screen and vicinity), use the manga-chapter-ingest-stages-1-3 skill.
+globs: Frierien-chapter**/stage_01_ingest.md,Frierien-chapter**/stage_02_shot_list.md,Frierien-chapter**/stage_03_series_bible.md
+alwaysApply: false
+---
+
+# Manga ingest — Stages 1–3
+
+1. Follow **[`.cursor/skills/manga-chapter-ingest-stages-1-3/SKILL.md`](../skills/manga-chapter-ingest-stages-1-3/SKILL.md)** — RTL read path, beats, shot table with **Characters (on-screen)** and **Characters (vicinity)**.
+2. Stage 4 / Fal prompts must **not** invent cast; they consume this ingest via [`docs/nano-banana-2-prompting-guide.md`](../../docs/nano-banana-2-prompting-guide.md) §0.

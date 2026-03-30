@@ -1,0 +1,15 @@
+---
+description: When creating or editing Fal Nano Banana 2 (or shared manga-to-anime still prompts), use the nano-banana-2-prompting skill and project guide.
+globs: scripts/**/*.py,Frierien-chapter081/stage_03_series_bible.md,Frierien-chapter081/stage_04*.md,panels/*.png
+alwaysApply: false
+---
+
+# Nano Banana 2 — still prompts
+
+When **creating** or **modifying** prompts for **`fal-ai/nano-banana-2/edit`** (or the shared `*_PROMPT_FLUX` strings used by that endpoint):
+
+1. **Read and follow** the Agent Skill **[`.cursor/skills/nano-banana-2-prompting/SKILL.md`](../skills/nano-banana-2-prompting/SKILL.md)** (workflow + verification checklist). Before prompt-only tuning, ensure **`panels/panel_s*.png`** matches **`stage_02`** — see **[`manga-panel-crop-for-shots`](../skills/manga-panel-crop-for-shots/SKILL.md)** when creating or fixing crops.
+2. **Read** [docs/flux-2-pro-prompting-guide.md](../../docs/flux-2-pro-prompting-guide.md) for edit-flow lessons, shot file roles, and QC logging (guide name is historical; **Nano is the default renderer**).
+3. Prefer **small edits**; avoid hex walls that override **reference** layout. Log repeat failures in `Frierien-chapter081/stage_04_*_visual_qc_log.md`.
+
+**Flux 2 Pro** is **not** the default for new work; use only if the user explicitly requests `--model flux-2-pro-edit`.
