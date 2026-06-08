@@ -2,14 +2,14 @@
 
 Personal workflow for turning ordered **manga chapter** material into **anime-style stills** and **short motion clips** using **[Fal.ai](https://fal.ai)** — with story, shot identity, and prompts kept in versioned markdown instead of ad-hoc copy-paste.
 
-The current worked example tracks **Frieren chapter 81** (“El Dorado” / golden Weise beats), but the **stage layout** and **scripts** are meant to repeat for other chapters.
+The repo ships **pipeline code and docs** only. **Chapter folders** (page scans, `stage_01`–`stage_03`, QC logs) stay **local and gitignored** — create a new `Frierien-chapterNNN/` or `Chapter-NN/` per manga chapter you work on.
 
 ## What this repo is
 
 | Piece | Role |
 |--------|------|
-| **Stages 1–3** (`Frierien-chapter081/stage_01_ingest.md`, `stage_02_shot_list.md`, `stage_03_series_bible.md`) | Canon for page order, beats, shots (**S00x**), and style notes |
-| **`panels/panel_s###.png`** | Single-panel crops used as **edit references** for Nano Banana |
+| **Stages 1–3** (local `Frierien-chapterNNN/stage_01_ingest.md`, `stage_02_shot_list.md`, `stage_03_series_bible.md`) | Canon for page order, beats, shots (**S00x**), and style notes — **not in git** |
+| **`panels/eng/panel_s###.png`** | Single-panel crops used as **edit references** for Nano Banana |
 | **`scripts/fal_common.py`** | Shared **`S###_PROMPT_FLUX`** bodies (one string per shot for all backends) |
 | **`scripts/generate_s###_ref_edit.py`** | Stage **4**: image edit (**Nano Banana 2** by default) → PNG under `Tests/` |
 | **`scripts/generate_s###_kling_i2v.py`** | Stage **5** (optional): **Kling 2.6 Pro** image-to-video → MP4 under `outputs/video/` |
@@ -44,7 +44,7 @@ cd scripts
 python generate_s009_ref_edit.py
 ```
 
-- Default **`--ref`** is `panels/panel_s009.png` unless the script docstring says otherwise.
+- Default **`--ref`** is `panels/eng/panel_s009.png` unless the script docstring says otherwise.
 - Default model is **`nano-banana-2-edit`**; some scripts support **`--model flux-2-pro-edit`** for legacy runs.
 
 Outputs land under `Tests/` and `outputs/fal/` (see script stdout).
@@ -63,16 +63,18 @@ See [`docs/stage5-image-to-video-fal.md`](docs/stage5-image-to-video-fal.md) for
 ## Repository layout (short)
 
 ```
-Frierien-chapter081/   # Chapter ingest + shot list + series bible (+ optional stage_04 QC logs)
-panels/                # Per-shot manga crops (panel_s###.png)
+Frierien-chapterNNN/   # Local only — pages + stage_01–03 + stage_04 QC (gitignored)
+panels/                # Per-shot manga crops (gitignored)
 scripts/               # fal_common.py + generate_*_ref_edit.py + generate_*_kling_i2v.py
 docs/                  # Prompting / pipeline docs
-Tests/Final/           # Approved hero stills (I2V defaults)
-outputs/               # Generated logs, JSON, video (gitignored — regenerate locally)
-.cursor/skills/        # Cursor Agent Skills for prompts + ingest (optional)
+Tests/Final/           # Approved hero stills (gitignored)
+outputs/               # Generated logs, JSON, video (gitignored)
+.cursor/skills/        # Cursor Agent Skills for prompts + ingest
 ```
 
 ## Cursor / contributors
+
+**Students / interns:** [`docs/cursor-student-workbook.md`](docs/cursor-student-workbook.md) — [Cursor guide PDF](docs/cursor-student-workbook-en-cursor-guide.pdf) → [Setup PDF](docs/cursor-student-workbook-en-setup.pdf) → [S006 PDF](docs/cursor-student-workbook-en-s006-first-try.pdf) → [Skills reference](docs/cursor-student-workbook-en.pdf) · [粵語](docs/cursor-student-workbook-yue.md).
 
 Agent-oriented workflows live in **`.cursor/skills/`** (e.g. nano-banana prompting, panel crops, I2V motion wording). They assume you keep **Stages 1–3** truthful before trusting `fal_common.py` for a given **S###**.
 

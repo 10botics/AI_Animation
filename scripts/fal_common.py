@@ -1,4 +1,4 @@
-"""Shared Fal.ai helpers: project root, API key, downloads, shot prompt strings (S001–S012, S075, S076, …).
+"""Shared Fal.ai helpers: project root, API key, downloads, shot prompt strings (S001–S018, S075, S076, …).
 
 When adding or changing any *_PROMPT_FLUX string, follow .cursor/skills/nano-banana-2-prompting/SKILL.md and docs/flux-2-pro-prompting-guide.md (Nano Banana 2 is the default edit backend; strings are shared).
 """
@@ -28,7 +28,7 @@ def assert_model_allowed(model_id: str) -> None:
         raise ValueError(f"Model blocked for this project: {model_id}")
 
 
-# S001 — **cold_open** MS–WS: chapter title splash `001.jpg` — **Denken** alone on bench (ref: `panels/panel_s001.png`; full-page single panel).
+# S001 — **cold_open** MS–WS: chapter title splash `001.jpg` — **Denken** alone on bench (ref: `panels/eng/panel_s001.png`; full-page single panel).
 # Story (Stages 1–3): chapter **“El Dorado”** — **gilded / gold-textured world** is the arc (B3+ golden Weise, **S064–S065** gold ground). Cold open **foreshadows** that palette: **warm gilt environment**, not icy neutral only; still **not** full **S010** ridge hero shot.
 # Material locks align with **docs/manga-greyscale-to-color.md** (matte vs specular, iron/glass/snow reads).
 # Bookends **S059** empty bench; same character as present-timeline Denken (monocle, beard, dark robes).
@@ -53,7 +53,7 @@ S001_PROMPT_FLUX = (
 )
 
 
-# S010 — golden ridge wide (ref: `panels/panel_s010.png`, from `003.jpg` wide tier): Fern | Frieren+trunk | Stark.
+# S010 — golden ridge wide (ref: `panels/eng/panel_s010.png`, from `003.jpg` wide tier): Fern | Frieren+trunk | Stark.
 # Camera: **behind** trio — they face the **gold vista**, **backs** to viewer; refs are rear silhouettes, not frontal hero faces.
 S010_PROMPT_FLUX = (
     "Fantasy anime TV production quality, cinematic **wide ridge overlook**, soft daylight, clear depth, soft cel shading, "
@@ -101,7 +101,7 @@ S002_PROMPT_FLUX = (
 )
 
 
-# S003 — **present** MCU / profile: `002.jpg` row 2 (viewer’s right): **Fern** + **squirrel-like messenger** with bag (ref: `panels/panel_s003.png`).
+# S003 — **present** MCU / profile: `002.jpg` row 2 (viewer’s right): **Fern** + **squirrel-like messenger** with bag (ref: `panels/eng/panel_s003.png`).
 # BFL order: subject → action → style → context; costume locks align **S002** travel Fern, not Frieren.
 S003_PROMPT_FLUX = (
     "Fantasy anime television, medium close profile shot, soft cel shading, cool Northern forest daylight, painterly ground detail. "
@@ -122,7 +122,7 @@ S003_PROMPT_FLUX = (
 )
 
 
-# S004 — **present** MS (reframed vs manga): **Frieren** **side/profile** foreground + **open grimoire**; **Fern** **deeper in background** + envelope (ref: `panels/panel_s004.png` for identity/locale).
+# S004 — **present** MS (reframed vs manga): **Frieren** **side/profile** foreground + **open grimoire**; **Fern** **deeper in background** + envelope (ref: `panels/eng/panel_s004.png` for identity/locale).
 # Intentional **camera change** from the flat panel: upload informs **who / where / what**, not 1:1 lens match.
 S004_PROMPT_FLUX = (
     "Fantasy anime television, soft cel shading, cool Northern forest daylight, painterly trees and leaf litter. "
@@ -141,7 +141,7 @@ S004_PROMPT_FLUX = (
 )
 
 
-# S005 — **present** CU: **Fern** with letter + faded **Lernen** memory telegraph (`002.jpg` bottom tier, read-first panel; ref `panels/panel_s005.png`).
+# S005 — **present** CU: **Fern** with letter + faded **Lernen** memory telegraph (`002.jpg` bottom tier, read-first panel; ref `panels/eng/panel_s005.png`).
 S005_PROMPT_FLUX = (
     "Fantasy anime television, soft cel shading, cinematic close shot, cool Northern forest ambience with **shallow depth** — painterly bokeh. "
     "**Subject:** young mage **Fern** in **foreground** — **three-quarter or profile** read, eyes lowered toward a **folded letter or paper** in her hands; "
@@ -153,7 +153,7 @@ S005_PROMPT_FLUX = (
 )
 
 
-# S006 — **present** MS: **Weise camp** — **Frieren** at tree, **Fern** by fire. **Camera locked** to `panels/panel_s006.png` (no pull-back / no S002 wide lens). **Stark** optional **frame-edge** only if **no** reframe.
+# S006 — **present** MS: **Weise camp** — **Frieren** at tree, **Fern** by fire. **Camera locked** to `panels/eng/panel_s006.png` (no pull-back / no S002 wide lens). **Stark** optional **frame-edge** only if **no** reframe.
 S006_PROMPT_FLUX = (
     "Fantasy anime television, soft cel shading, cool Northern forest daylight, painterly trunks and leaf litter, **small campfire** warmth. "
     "**Camera / framing — sacred:** **`panel_s006.png` wins** — **keep** the **same lens, distance, camera height, and subject scale** as the upload for **Frieren** and **Fern**; **do not mirror** horizontally; "
@@ -171,7 +171,24 @@ S006_PROMPT_FLUX = (
 )
 
 
-# S007 — **layered composite** at camp (ref `panels/panel_s007.png`): translucent **Frieren** upper field; **Stark** + **Fern** solid below; **daytime** forest / campfire accent.
+# S006A — **insert** MCU: **Fern** by **fire** addresses **Frieren** at tree — **lip-sync-friendly** face read; **same camp** as **S006**, **S005-like** closeness. **No manga panel**; multi-ref from approved **S006** + **S005** stills.
+S006A_PROMPT_FLUX = (
+    "Fantasy anime television, soft cel shading, cool Northern forest daylight with **warm campfire bounce** on chin and scarf, painterly trunks and leaf litter. "
+    "**Camera / framing:** **medium close-up** on **Fern** — **face, eyes, and mouth clearly visible** for dialogue; **chest-up or tighter** than **S006** MS, **same camp geography** as the **S006** master ref; **do not mirror** horizontally. "
+    "**Fern (hero):** young mage **foreground**, **seated on forest floor** beside the **small campfire** in the **same seat** as **S006**; "
+    "**three-quarter face** turned toward **Frieren** at the **tree** (gaze **off toward frame left**); polite **concerned** expression — lips **neutral-to-speaking**, not obscured by scarf; "
+    "long straight **purple** hair, **blunt bangs**, **butterfly-style hair ornament** at **back of head**; "
+    "**light-gray** winter jacket, **thick braided blue scarf** (scarf **below** the jaw line), **dark blue** skirt or lower garments; "
+    "**hands** may rest on lap or gesture lightly — **no letter**, **no Lernen memory portrait**. "
+    "**Frieren (background):** petite elf **soft and smaller** at the **large tree** **left background** — **silver-white pigtails**, **elf ears**, **white or cream cape** with **gold trim**, **calm flat** read; **shallow depth**, **not** a second hero subject. "
+    "**Campfire:** **small orange** flames at **frame edge** near Fern — **warm rim** only, **not** night key. "
+    "**Seating:** **forest floor** — **not** logs or stumps. **No Stark** unless a **tiny** soft edge read without widening frame. "
+    "**No squirrel**, **no duplicate** Fern or Frieren. Mood: **Fern presses** Frieren on enthusiasm — bridge after **S005** letter beat. "
+    "Finished illustration only — no speech balloons, halftone, panel borders, or lettering."
+)
+
+
+# S007 — **layered composite** at camp (ref `panels/eng/panel_s007.png`): translucent **Frieren** upper field; **Stark** + **Fern** solid below; **daytime** forest / campfire accent.
 S007_PROMPT_FLUX = (
     "Fantasy anime television, soft cel shading, **daytime** Northern forest camp, dramatic **layered composite** (TV memory / inner-thought grammar) — **soft clear daylight** and canopy bounce; **small campfire** may sit in a **lower corner** as a **mild warm accent** only — **not** night-keyed scene, **not** blue moon wash. "
     "**Composition:** match **`panel_s007.png` exactly** — **do not mirror**; **large soft translucent Frieren** bust or portrait **in the upper field** (memory echo), **solid** **Stark** and **Fern** **seated below** in the physical camp plane. "
@@ -183,7 +200,7 @@ S007_PROMPT_FLUX = (
 )
 
 
-# S008 — **present** MS: **daytime** camp **grimoire excitement** (`003.jpg` top tier viewer-left; ref `panels/panel_s008.png`) — **Fern** back to camera; **Frieren** holds **open** tome; **Stark** rear left.
+# S008 — **present** MS: **daytime** camp **grimoire excitement** (`003.jpg` top tier viewer-left; ref `panels/eng/panel_s008.png`) — **Fern** back to camera; **Frieren** holds **open** tome; **Stark** rear left.
 S008_PROMPT_FLUX = (
     "Fantasy anime television, soft cel shading, **daytime** **Weise forest** — **cool Northern daylight** under trees, **sun-flecks**, soft shadows on bark and leaf litter; **primary key is daylight** — **not** night, **not** dusk-blue grading. **No obligatory campfire** unless the reference shows one. "
     "**Subject:** exactly **three** — **Fern**, **Frieren**, **Stark**; **match `panel_s008.png` staging**, **do not mirror**. "
@@ -195,7 +212,7 @@ S008_PROMPT_FLUX = (
 )
 
 
-# S009 — **present** WS: trio **walking forest path** toward camera (ref `panels/panel_s009.png`) — **Stark** L, **Frieren** center with **rectangular case**, **Fern** R.
+# S009 — **present** WS: trio **walking forest path** toward camera (ref `panels/eng/panel_s009.png`) — **Stark** L, **Frieren** center with **rectangular case**, **Fern** R.
 S009_PROMPT_FLUX = (
     "Fantasy anime television, **daylight** forest path, soft cel shading, **sun-flecked** trunks, **dappled** dirt path, bright sky slivers through canopy — **clear Northern travel day**. "
     "**Identity lock:** **Stark**, **Frieren**, **Fern** on the trail — **left-to-right** order **fixed** — **do not mirror** horizontally; same **Weise journey** wardrobe as **`panel_s009.png`**. "
@@ -210,7 +227,7 @@ S009_PROMPT_FLUX = (
 )
 
 
-# S011 — **present** MCU/MS: **Stark** awe at endless **gold** (`003.jpg` tier; ref `panels/panel_s011.png`) — **one** character; faces **gold vista** toward **frame LEFT**.
+# S011 — **present** MCU/MS: **Stark** awe at endless **gold** (`003.jpg` tier; ref `panels/eng/panel_s011.png`) — **one** character; faces **gold vista** toward **frame LEFT**.
 S011_PROMPT_FLUX = (
     "Fantasy anime television, soft cel shading, **bright daytime**, **cinematic depth**, melancholic fantasy adventure color. "
     "**Subject: only Stark** — **one** young warrior, **no** Fern, **no** Frieren, **no** second figure. "
@@ -223,7 +240,7 @@ S011_PROMPT_FLUX = (
 )
 
 
-# S012 — **present** WS: **backs** toward **Fortified City of Weise** — full **gilt** realm (`003.jpg` bottom tier viewer-left; ref `panels/panel_s012.png`).
+# S012 — **present** WS: **backs** toward **Fortified City of Weise** — full **gilt** realm (`003.jpg` bottom tier viewer-left; ref `panels/eng/panel_s012.png`).
 S012_PROMPT_FLUX = (
     "Fantasy anime television, soft cel shading, **epic wide high-angle** from **behind** the party, **bright clear daytime**, **polished-gold** environment matching **S010** material read, faint melancholy. "
     "**Camera / orientation — match `panel_s012.png`:** all **three** face **away from camera** toward the **distant citadel** — **backs and shoulders** to viewer, **gazing** over a **sea of gold**. **Do not mirror** left-right order. "
@@ -300,7 +317,7 @@ S003_PROMPT_FLUX_COMPOSITE_SQUIRREL = (
 )
 
 
-# S075 — **present** MS OTS: Denken & adult Frieren; **snow + rock mountain vista** per `panels/panel_s075.png` (**S074** scarf).
+# S075 — **present** MS OTS: Denken & adult Frieren; **snow + rock mountain vista** per `panels/eng/panel_s075.png` (**S074** scarf).
 # v8: mirror lock. v9: full hair, not balding. v10: white hair (superseded). v11: Denken **brown** scalp hair (anime / wiki); wording positive-only (no “not silver” beside Denken).
 S075_PROMPT_FLUX = (
     "Fantasy anime television, medium shot, soft cel shading, painterly background, present Northern arc emotional beat. "
@@ -318,7 +335,7 @@ S075_PROMPT_FLUX = (
 )
 
 
-# S076 — hero-party flashback meadow (ref: `panels/panel_s076.png`, from `016.jpg` wide tier). **Panel fidelity first:** v2 cast wording; long hex wardrobe blocks removed (they overwrote ref layout).
+# S076 — hero-party flashback meadow (ref: `panels/eng/panel_s076.png`, from `016.jpg` wide tier). **Panel fidelity first:** v2 cast wording; long hex wardrobe blocks removed (they overwrote ref layout).
 # Color = light nudge only after matching reference silhouettes; edit lead-in stresses image in generate_s076_ref_edit.py.
 S076_PROMPT_FLUX = (
     "Fantasy anime television key art, soft cel shading, painterly background, heroic party flashback memory. "
@@ -350,6 +367,57 @@ S076_PROMPT_FLUX = (
     "he must never match Himmel's eye level. "
     "Only these four people exist in frame — contemporary party members stay absent. "
     "Mood: quiet sacred calm, nostalgic courage, no on-image typography, signature, or comic panels."
+)
+
+
+# S016 — **present** WS: forest meet — **Denken** L, **Stark** mid, **Frieren** R (`004.jpg` row 2).
+# Ref: `panels/eng/panel_s016.png` (from `panel_s015jap.png` crop); JP balloons: `panels/jap/panel_s015jap.png`.
+S016_PROMPT_FLUX = (
+    "Fantasy anime television, medium-wide forest encounter, soft cel shading, painterly woodland depth, "
+    "cool-to-neutral Northern-country daylight, clear atmospheric perspective, emotional restraint in faces. "
+    "Subject: exactly **three** people standing in a **dense forest clearing** — **left to right**: "
+    "**Denken**, **Stark**, **Frieren** — **same spacing, scale, and waist-up framing** as the uploaded reference; "
+    "**preserve horizontal layout** — **do not mirror** left-right. "
+    "**Denken (left):** elderly human mage, **magnificent full brown beard and mustache**, **short neat brown scalp hair**, "
+    "**gold monocle on chain** over one eye, **dark heavy formal robes** with **horizontal toggle closures**, "
+    "**high structured collar**, dignified weary bearing, shorter than Stark. "
+    "**Stark (center):** young warrior, **spiky vivid red hair** with darker roots, **orange eyes**, muscular tall build, "
+    "**red winter coat** with **cream lapels and cuffs**, **black fingerless gloves**, **crossbody strap** for **battle axe** on back. "
+    "**Frieren (right):** petite adult elf, **silver-white low twin pigtails**, long horizontal ears, **teal-green eyes**, "
+    "calm **mild realization** expression; **white double-breasted winter coat**, **thick pale travel scarf** wrapped high, "
+    "**gold trim** at collar, **red teardrop earrings**. "
+    "Environment: vertical tree trunks, layered foliage, soft diffused forest light, leaf litter at their feet — "
+    "**present** journey beat, **not** golden city vista, **not** snowfield. "
+    "Mood: quiet first meeting with the barrier warden; finished illustration only — "
+    "no speech balloons, panel borders, halftone, SFX, or lettering."
+)
+
+
+# S018 — **present** WS: four at **wood cliff fence** + wooden building (`panel_s018jap.png`).
+# L→R: Stark, Fern, Denken, Frieren (rectangular travel trunk). Cliff drop in foreground; forest behind.
+S018_PROMPT_FLUX = (
+    "Fantasy anime television, wide cliffside encounter, soft cel shading, painterly forest depth, "
+    "cool-to-neutral Northern-country daylight with soft sun through canopy, clear atmospheric perspective. "
+    "Subject: exactly **four** travelers standing **behind a low wooden fence** — **left to right**: "
+    "**Stark**, **Fern**, **Denken**, **Frieren** — **same spacing, scale, and waist-up framing** as the uploaded reference; "
+    "**preserve horizontal layout** — **do not mirror** left-right. "
+    "**Height / proportions (critical — match reference crown levels):** **Stark** tallest and broad; "
+    "**Fern** second-tallest — her crown about **Stark's chin or lower jaw**; "
+    "**Frieren** third — **standing taller than Denken** (top of **Frieren's head** clearly **above** top of **Denken's scalp** — beard volume does **not** count as height), still **shorter than Fern**; slender adult elf, **not** chibi; "
+    "**Denken** **shortest** in the lineup — stocky elder, **lowest crown** of the four, **shorter than Frieren** despite long beard. "
+    "**Stark (left):** young warrior, **spiky vivid red hair**, **red winter coat** with **cream lapels**, "
+    "**battle axe** strapped on back with crossbody strap, muscular build. "
+    "**Fern:** young human mage, waist-length **purple** hair, **butterfly ornament** at back of head, "
+    "cropped **light-gray** winter jacket, **thick braided blue scarf**, **dark blue** long dress, black boots. "
+    "**Denken:** elderly human mage, **magnificent full brown beard and mustache**, **short neat brown scalp hair**, "
+    "**gold monocle on chain** when face reads, **dark heavy formal robes** with toggle closures, dignified stocky bearing. "
+    "**Frieren (right):** petite adult elf, **silver-white low twin pigtails**, long horizontal ears, **teal-green eyes**, "
+    "**white** capelet and winter coat with **gold trim**, **thick pale scarf**; carries **one large rectangular brown traveling trunk** in one hand. "
+    "Foreground: **two-rail wooden fence** with vertical posts; **rocky cliff edge** visible below the fence line. "
+    "Right side: **wooden clapboard building** — gabled roof, **large arched multi-pane window**, simple wooden door, warm honey-brown siding. "
+    "Background: dense temperate forest, layered trunks and foliage, soft diffused light — **present** journey, **not** golden city vista. "
+    "Mood: quiet pause at a barrier overlook; finished illustration only — "
+    "no speech balloons, panel borders, halftone, SFX, or lettering."
 )
 
 

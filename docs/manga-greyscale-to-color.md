@@ -49,7 +49,7 @@ Single-panel splash: Denken centered on ornate bench, clapboard building and win
 - **Building:** Warm greige siding; window reflecting **amber** sky, warm muntins.
 - **Ground:** Snow with **cool** bench contact shadows; sunlit granules may read **champagne** or fine **gold dust** as foreshadow.
 
-Refs: [`panels/panel_s001.png`](../panels/panel_s001.png), [`Frierien-chapter081/stage_02_shot_list.md`](../Frierien-chapter081/stage_02_shot_list.md) (S001), [`docs/denken-appearance-reference.md`](./denken-appearance-reference.md).
+Refs: [`panels/eng/panel_s001.png`](../panels/eng/panel_s001.png), [`Frierien-chapter081/stage_02_shot_list.md`](../Frierien-chapter081/stage_02_shot_list.md) (S001), [`docs/denken-appearance-reference.md`](./denken-appearance-reference.md).
 
 ---
 

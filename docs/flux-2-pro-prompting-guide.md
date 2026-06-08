@@ -118,7 +118,7 @@ Practical levers (strongest first):
 
 ## 6. Lessons from Chapter 81 pipeline (S076, S075)
 
-**S075** (`panels/panel_s075.png`): **Cropped single panel** as `image_urls` beats full page. **OTS** shots — describe only **visible** anatomy; naming **beard/monocle** when the panel shows **only the back** can pull wrong rotations or faces. **Background** must match **ground truth** (here: **snowfield + rock breaking through snow on ridges**, grey overcast), not other chapter beats (flower spell-field). **Avoid ambiguous staging** like “character left **or opposite**” — it licenses **horizontal mirroring**; lock **viewer-left / viewer-right** to match the panel. Add **preserve chirality / do not mirror** in the edit lead-in when drift appears.
+**S075** (`panels/eng/panel_s075.png`): **Cropped single panel** as `image_urls` beats full page. **OTS** shots — describe only **visible** anatomy; naming **beard/monocle** when the panel shows **only the back** can pull wrong rotations or faces. **Background** must match **ground truth** (here: **snowfield + rock breaking through snow on ridges**, grey overcast), not other chapter beats (flower spell-field). **Avoid ambiguous staging** like “character left **or opposite**” — it licenses **horizontal mirroring**; lock **viewer-left / viewer-right** to match the panel. Add **preserve chirality / do not mirror** in the edit lead-in when drift appears.
 
 Documented in `Frierien-chapter081/stage_04_s076_visual_qc_log.md` (party meadow):
 
@@ -141,11 +141,11 @@ Documented in `Frierien-chapter081/stage_04_s076_visual_qc_log.md` (party meadow
 | 2026-03-25 | S075 **v11:** Denken head hair **brown** (anime); still keep Frieren **silver-white** elf hair separate in the same frame. |
 | 2026-03-26 | S075 **v11** tweak: Denken brown hair described **positive-only** — drop adjacent “not silver-white” on him (guide §2.1); Frieren line already locks elf hair. |
 | 2026-03-26 | **S002:** forest camp trio — `S002_PROMPT_FLUX` + `generate_s002_ref_edit.py`; BFL order subject→action→style→context; lead-in strips **narrative text boxes** from manga panel. |
-| 2026-03-26 | **S002** backends: **`nano-banana-2-edit`** (default) \| `flux-2-pro-edit` \| **`both`**; ref [`panels/panel_s002.png`](../panels/panel_s002.png). |
-| 2026-03-26 | **S010:** `generate_s010_ref_edit.py` — default **`nano-banana-2-edit`**; ref [`panels/panel_s010.png`](../panels/panel_s010.png); **`both`** = Pro + Nano; `--with-flex` only for Flux. |
+| 2026-03-26 | **S002** backends: **`nano-banana-2-edit`** (default) \| `flux-2-pro-edit` \| **`both`**; ref [`panels/eng/panel_s002.png`](../panels/eng/panel_s002.png). |
+| 2026-03-26 | **S010:** `generate_s010_ref_edit.py` — default **`nano-banana-2-edit`**; ref [`panels/eng/panel_s010.png`](../panels/eng/panel_s010.png); **`both`** = Pro + Nano; `--with-flex` only for Flux. |
 | 2026-03-26 | **S075:** **`fal-ai/nano-banana-2/edit`** default — **identical** `S075_EDIT_LEAD_IN` + `S075_PROMPT_FLUX`; Flux legacy via `--model flux-2-pro-edit`. |
 | 2026-03-26 | **S076:** **`generate_s076_ref_edit.py`** default **`nano-banana-2-edit`** — **identical** `S076_EDIT_LEAD_IN` + `S076_PROMPT_FLUX`; `--with-flex` ignored for Nano. |
 | 2026-03-26 | **Project policy:** still pipeline defaults to **Nano Banana 2**; Cursor skill **`nano-banana-2-prompting`**; Flux optional only. |
-| 2026-03-26 | **S076** default ref **`panels/panel_s076.png`** (was full `016.jpg`) — single-panel crop for Fal uploads. |
+| 2026-03-26 | **S076** default ref **`panels/eng/panel_s076.png`** (was full `016.jpg`) — single-panel crop for Fal uploads. |
 
 *Update this file when you discover new FLUX.2 or Fal edit behaviors worth standardizing.*

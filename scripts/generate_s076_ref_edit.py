@@ -6,7 +6,7 @@ S076 — hero-party meadow panel → image edit on Fal.
 - **Default:** `fal-ai/nano-banana-2/edit` — `--model nano-banana-2-edit` (same prompt + `image_urls`).
 - **Legacy:** `fal-ai/flux-2-pro/edit`; optional `--with-flex` also runs `flux-2-flex/edit`.
 
-Default reference: `panels/panel_s076.png` (wide flower-field panel). Pass `--ref` for full `Frierien-chapter081/016.jpg` or another crop.
+Default reference: `panels/eng/panel_s076.png` (wide flower-field panel). Pass `--ref` for full `Frierien-chapter081/016.jpg` or another crop.
 
 Saves JSON under outputs/fal/ and images under Tests/.
 """
@@ -22,6 +22,7 @@ from pathlib import Path
 
 import fal_client
 
+from panel_paths import PANELS_ENG
 from fal_common import (
     ROOT,
     S076_PROMPT_FLUX,
@@ -34,7 +35,7 @@ from fal_common import (
 
 SHOT_ID = "S076"
 
-DEFAULT_REF = ROOT / "panels" / "panel_s076.png"
+DEFAULT_REF = PANELS_ENG / "panel_s076.png"
 
 # FLUX.2 edit: first sentences should state what the model should do to the uploaded image and what to preserve (BFL image-editing guide).
 S076_EDIT_LEAD_IN = (

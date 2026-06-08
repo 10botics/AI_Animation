@@ -4,7 +4,7 @@ S009 — Kling 2.6 Pro **image-to-video** from an approved Stage 4 still.
 
 
 
-**WS** path: **Stark**, **Frieren** (rectangular case), **Fern** — `panels/panel_s009.png` / **`Tests/Final/`**.
+**WS** path: **Stark**, **Frieren** (rectangular case), **Fern** — `panels/eng/panel_s009.png` / **`Tests/Final/`**.
 
 
 
@@ -67,9 +67,7 @@ MODEL_ID = "fal-ai/kling-video/v2.6/pro/image-to-video"
 
 
 DEFAULT_START = (
-
-    ROOT / "Tests" / "Final" / "S009_nano-banana-2-edit_20260330T043403Z.png"
-
+    ROOT / "Tests" / "Final" / "S009_nano-banana-2-edit_20260527T084918Z.png"
 )
 
 
@@ -213,6 +211,13 @@ EXPERIMENTS: dict[str, tuple[str, str]] = {
 }
 
 
+AUDIO_TAIL = (
+    " Ambient forest trail day: soft footsteps on dirt path, light leaf and branch rustle, "
+    "gentle breeze in canopy, cloth and travel-case sway creak; "
+    "no speech, no dialogue, no vocalizations, no singing, no music score."
+)
+
+
 
 
 
@@ -277,6 +282,8 @@ def main() -> int:
 
 
     tag, motion_prompt = EXPERIMENTS[args.experiment]
+    if args.audio and AUDIO_TAIL.strip() not in motion_prompt:
+        motion_prompt = motion_prompt + AUDIO_TAIL
 
 
 
@@ -440,7 +447,8 @@ def main() -> int:
 
         ext = ".mp4"
 
-    dest = video_dir / f"{SHOT_ID}_kling-v26-pro_i2v_{ts}_{tag}{ext}"
+    audio_tag = "-audio" if args.audio else ""
+    dest = video_dir / f"{SHOT_ID}_kling-v26-pro_i2v_{ts}_{tag}{audio_tag}{ext}"
 
     print(f"Downloading: {vurl}", flush=True)
 

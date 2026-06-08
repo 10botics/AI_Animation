@@ -5,6 +5,19 @@
 .env.*
 !.env.example
 
+# MiniMax / TTS — local voice IDs + raw reference recordings (do not commit)
+voice_registry.local.json
+voice_refs/
+# Regenerate via scripts/prepare_*_qwen_ref.py (keep README only)
+Voice Reference/**
+!Voice Reference/README.md
+
+# =============================================================================
+# HR / intern applications — personal data (CVs, emails, spreadsheets)
+# =============================================================================
+Intern_applications/
+*.eml
+
 # =============================================================================
 # Generated / cache (reproducible with scripts + API key)
 # =============================================================================
@@ -16,38 +29,26 @@ Tests/
 # Timeline / scratch exports (if present)
 cuts/
 
+# Student workbook PDFs — rebuild from docs/cursor-student-workbook-en.md
+docs/cursor-student-workbook*.pdf
+
+# Google Drive / editor temp debris under chapter folders
+**/.tmp.driveupload/
+
 # =============================================================================
 # Media — manga sources, crops, renders (generic image→animation workflow)
 # =============================================================================
 # Panel crops and any future ref/ folders
 panels/
 
-# Raw chapter scans (keep stage_*.md etc.)
-# — Frierien-chapter*, Chapter-*, chNNN, etc.
-Frierien-chapter*/**/*.jpg
-Frierien-chapter*/**/*.jpeg
-Frierien-chapter*/**/*.JPG
-Frierien-chapter*/**/*.JPEG
-Frierien-chapter*/**/*.png
-Frierien-chapter*/**/*.webp
-Chapter-*/**/*.jpg
-Chapter-*/**/*.jpeg
-Chapter-*/**/*.JPG
-Chapter-*/**/*.JPEG
-Chapter-*/**/*.png
-Chapter-*/**/*.webp
-chapter-*/**/*.jpg
-chapter-*/**/*.jpeg
-chapter-*/**/*.JPG
-chapter-*/**/*.JPEG
-chapter-*/**/*.png
-chapter-*/**/*.webp
-ch[0-9][0-9][0-9]/**/*.jpg
-ch[0-9][0-9][0-9]/**/*.jpeg
-ch[0-9][0-9][0-9]/**/*.JPG
-ch[0-9][0-9][0-9]/**/*.JPEG
-ch[0-9][0-9][0-9]/**/*.png
-ch[0-9][0-9][0-9]/**/*.webp
+# Chapter workdirs — local only (page scans, stage_*.md, stage_04 QC). Recreate per chapter.
+Chapter-*/
+Frierien-chapter*/
+chapter-*/
+ch[0-9][0-9][0-9]/
+
+# Clip / demo deliverables (not needed to run the pipeline on a new chapter)
+subs/
 
 # Drop folders for ad-hoc sources (any image → animation)
 inputs/
@@ -69,6 +70,12 @@ sources/
 *.m4v
 *.avi
 *.gif
+
+# Stray audio exports (voice WAV/MP3 live under outputs/ or voice_refs/)
+*.wav
+*.mp3
+*.flac
+*.aac
 
 # =============================================================================
 # Python

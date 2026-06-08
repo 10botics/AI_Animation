@@ -1,5 +1,5 @@
 """
-S007 — **layered MCU composite:** translucent **Frieren** (memory) over **Stark** + **Fern** at **daytime** camp; Fern holds **grimoire** (ref `panels/panel_s007.png`).
+S007 — **layered MCU composite:** translucent **Frieren** (memory) over **Stark** + **Fern** at **daytime** camp; Fern holds **grimoire** (ref `panels/eng/panel_s007.png`).
 
 **Same prompt** for every backend: `S007_EDIT_LEAD_IN` + `S007_PROMPT_FLUX`.
 
@@ -7,7 +7,7 @@ S007 — **layered MCU composite:** translucent **Frieren** (memory) over **Star
 - **Legacy:** `fal-ai/flux-2-pro/edit` — `--model flux-2-pro-edit`.
 - **`--model both`** — one upload, Flux then Nano Banana.
 
-Default ref: **`panels/panel_s007.png`**. Pass `--ref` to override.
+Default ref: **`panels/eng/panel_s007.png`**. Pass `--ref` to override.
 """
 
 from __future__ import annotations
@@ -21,6 +21,7 @@ from pathlib import Path
 
 import fal_client
 
+from panel_paths import PANELS_ENG
 from fal_common import (
     ROOT,
     S007_PROMPT_FLUX,
@@ -33,7 +34,7 @@ from fal_common import (
 
 SHOT_ID = "S007"
 
-DEFAULT_REF = ROOT / "panels" / "panel_s007.png"
+DEFAULT_REF = PANELS_ENG / "panel_s007.png"
 
 FLUX_PRO_EDIT_SLUG = "flux-2-pro-edit"
 FLUX_PRO_EDIT_MODEL_ID = "fal-ai/flux-2-pro/edit"

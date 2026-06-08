@@ -1,5 +1,5 @@
 """
-S075 — **present** Denken & adult Frieren, **snowy Northern OTS** (default ref: `panels/panel_s075.png`).
+S075 — **present** Denken & adult Frieren, **snowy Northern OTS** (default ref: `panels/eng/panel_s075.png`).
 
 **Same prompt** for every backend: `S075_EDIT_LEAD_IN` + `S075_PROMPT_FLUX` (v11 Denken brown hair, etc.).
 
@@ -22,6 +22,7 @@ from pathlib import Path
 
 import fal_client
 
+from panel_paths import PANELS_ENG
 from fal_common import (
     ROOT,
     S075_PROMPT_FLUX,
@@ -34,7 +35,7 @@ from fal_common import (
 
 SHOT_ID = "S075"
 
-DEFAULT_REF = ROOT / "panels" / "panel_s075.png"
+DEFAULT_REF = PANELS_ENG / "panel_s075.png"
 
 # FLUX.2 /edit: lead-in first — layout anchor, strip manga UI (BFL + project skill).
 S075_EDIT_LEAD_IN = (

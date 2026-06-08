@@ -138,6 +138,8 @@ Video prompts should be **short, motion-first**, and **subtle** for v1:
 
 Do **not** paste the entire `*_PROMPT_FLUX` block unless you are debugging; it overloads motion models and fights the still.
 
+**TV-anime framerate on Kling (no `fps` API):** use [anime-scene-i2v-prompting **§4c**](../anime-scene-i2v-prompting/SKILL.md) — limited-animation / on-twos prompt + anti–3D-glide negatives; optional `generate_s004_kling_i2v.py --anime-fps 12`. **Approved on S004** (2026-05-27).
+
 ---
 
 ## 5. Verification (before calling Fal)

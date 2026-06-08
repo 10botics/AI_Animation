@@ -9,7 +9,7 @@ S003 — **present** Weise **camp**: **Fern** + squirrel-in-satchel (`002.jpg` r
 - **Flux 2 Pro** `fal-ai/flux-2-pro/edit` — `landscape_16_9` or `--image-size`.
 - **`--model both`** — one upload, Flux then Nano Banana.
 
-Default ref: **`panels/panel_s003.png`** — both variants use this crop for **chirality** (Fern **left-facing**, bag+squirrel **right** in `full`). Nano default output **`--aspect-ratio 16:9`** to match the chapter pipeline; use **`9:16`** only if a run flips or crops badly.
+Default ref: **`panels/eng/panel_s003.png`** — both variants use this crop for **chirality** (Fern **left-facing**, bag+squirrel **right** in `full`). Nano default output **`--aspect-ratio 16:9`** to match the chapter pipeline; use **`9:16`** only if a run flips or crops badly.
 
 Pass `--ref` to override. Saves JSON under `outputs/fal/` and images under `Tests/`.
 """
@@ -25,6 +25,7 @@ from pathlib import Path
 
 import fal_client
 
+from panel_paths import PANELS_ENG
 from fal_common import (
     ROOT,
     S003_PROMPT_FLUX,
@@ -41,7 +42,7 @@ from fal_common import (
 
 SHOT_ID = "S003"
 
-DEFAULT_REF = ROOT / "panels" / "panel_s003.png"
+DEFAULT_REF = PANELS_ENG / "panel_s003.png"
 # Default input for extend-camp when user omits --ref (if file exists).
 DEFAULT_EXTEND_CAMP_REF = (
     ROOT / "Tests" / "S003_fernonly_nano-banana-2-edit_20260326T142928Z.png"

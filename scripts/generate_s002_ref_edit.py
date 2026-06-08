@@ -1,5 +1,5 @@
 """
-S002 — **present** Northern Weise **forest camp** trio (default ref: `panels/panel_s002.png`).
+S002 — **present** Northern Weise **forest camp** trio (default ref: `panels/eng/panel_s002.png`).
 
 **Same prompt** for every backend: `S002_EDIT_LEAD_IN` + `S002_PROMPT_FLUX`.
 
@@ -21,6 +21,7 @@ from pathlib import Path
 
 import fal_client
 
+from panel_paths import PANELS_ENG
 from fal_common import (
     ROOT,
     S002_PROMPT_FLUX,
@@ -33,7 +34,7 @@ from fal_common import (
 
 SHOT_ID = "S002"
 
-DEFAULT_REF = ROOT / "panels" / "panel_s002.png"
+DEFAULT_REF = PANELS_ENG / "panel_s002.png"
 
 FLUX_PRO_EDIT_SLUG = "flux-2-pro-edit"
 FLUX_PRO_EDIT_MODEL_ID = "fal-ai/flux-2-pro/edit"

@@ -24,6 +24,20 @@
 
 ---
 
+## 2a. Preferred for **new** Chapter 81 clips — ByteDance **Seedance 2.0** (image-to-video)
+
+| | |
+|--|--|
+| **Model ID** | `bytedance/seedance-2.0/image-to-video` (fast: `…/fast/image-to-video`) |
+| **Playground** | [fal.ai — Seedance 2 I2V](https://fal.ai/models/bytedance/seedance-2.0/image-to-video) |
+| **API shape** | `image_url`, `prompt`, optional `end_image_url`, string `duration` (`"4"`–`"15"` or `"auto"`), `resolution`, `aspect_ratio`, `generate_audio` |
+
+**Repo scripts:** `generate_s002_seedance_i2v.py`, `generate_s003_seedance_i2v.py`, `generate_s004_seedance_i2v.py`, etc. — same `Tests/Final/` driver pattern as Kling; **no** `negative_prompt` (steer with prompt text only).
+
+**Content policy:** `loc: generated_video` means the clip **rendered** then was blocked (common on **MS two-face** shots e.g. **S004**). Renaming characters in the prompt **does not** fix this by itself — use **shot routing** (Kling first), **near-static** Seedance wording, then post-SFX. See skill **§4b** (repo evidence table). Fal: [content_policy_violation](https://docs.fal.ai/errors#content_policy_violation).
+
+---
+
 ## 2. Default model: Kling 2.6 Pro (image-to-video)
 
 | | |
@@ -125,6 +139,16 @@ Also: avoid **too many simultaneous motions**, **contradictions**, and **asks th
 
 **Do not** dump [`scripts/fal_common.py`](../scripts/fal_common.py) `*_PROMPT_FLUX` into I2V — use **short motion prose** only.
 
+### 5.1 Kling — TV-anime framerate (no API knob)
+
+Kling 2.6 Pro I2V exposes **no `fps` field**. For **limited-animation / on-twos** feel (approved on **S004**, 2026-05-27):
+
+1. **Prompt:** `limited-animation timing`, `short pose holds`, `discrete in-between beats`, `animation on twos`, `almost locked 2D anime plate` — avoid `mocap`, `3D parallax tour`, `video-game` smoothness in motion text.
+2. **`negative_prompt`:** add `mocap glide`, `smooth cg camera orbit`, `hyperreal motion smear`, `continuous 3d parallax tour` (see `generate_s004_kling_i2v.py`, pattern from `generate_s009_kling_i2v.py --experiment 4`).
+3. **Post (optional):** `python generate_s004_kling_i2v.py --anime-fps 12` (default **12**; **`--anime-fps 0`** to skip). ffmpeg keeps **AAC** when `--audio` was used.
+
+Agent detail: [`.cursor/skills/anime-scene-i2v-prompting/SKILL.md`](../.cursor/skills/anime-scene-i2v-prompting/SKILL.md) **§4c**.
+
 ---
 
 ## 6. Pre-flight checklist
@@ -157,6 +181,7 @@ Fantasy anime wide shot — keep the exact same composition and three silhouette
 | Date | Change |
 |------|--------|
 | 2026-03-26 | Initial handbook: Kling 2.6 Pro I2V default, API + research + S010 example; points to Agent skill and Stages 1–4 sources. |
+| 2026-05-27 | §5.1 Kling TV-anime framerate: prompt + negative + optional `--anime-fps` (S004 QC). |
 
 ---
 

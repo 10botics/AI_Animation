@@ -1,6 +1,6 @@
 """
 S012 — Kling 2.6 Pro I2V: **WS** wide **backs** — **Fern** | **Frieren** + case | **Stark** toward **full gilt** Weise
-(Macht / El Dorado lore beat; ref `panels/panel_s012.png`; driver `Tests/Final/`).
+(Macht / El Dorado lore beat; ref `panels/eng/panel_s012.png`; driver `Tests/Final/`).
 
 Requires: `FAL_KEY` in `.env`, `fal-client`.
 """

@@ -59,7 +59,7 @@ Use **positive** tokens; scope **hair** vs **beard** vs **garment** to reduce FL
 
 ## This repo’s convention (Chapter 81 pipeline)
 
-For **`present`** Fal shots (e.g. S075 with `panels/panel_s075.png`):
+For **`present`** Fal shots (e.g. S075 with `panels/eng/panel_s075.png`):
 
 - **Head hair:** **Brown** (neat, full from behind in OTS), **not** ash grey and **not** silver-white (reserve silver-white for Frieren’s elf hair only).
 - **Beard / brows:** **Brown**, matching head hair; **no** grey or white facial hair on full-face shots.

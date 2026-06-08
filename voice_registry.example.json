@@ -1,0 +1,19 @@
+{
+  "minimax_custom_voice_ids": {
+    "Fern": "paste_custom_voice_id_after_running_minimax_voice_clone.py",
+    "Frieren": "",
+    "Stark": "",
+    "Denken": ""
+  },
+  "qwen_speaker_embeddings": {
+    "Frieren": {
+      "url": "fal-hosted speaker embedding URL after qwen clone",
+      "ref_wav": "Voice Reference/Japanese/Frieren/frieren_jp_qwen_ref.wav",
+      "ref_txt": "Voice Reference/Japanese/Frieren/frieren_jp_qwen_ref.txt",
+      "ref_seconds": 12,
+      "ref_skip": 0,
+      "reference_text": "exact transcript of curated ref clip",
+      "cloned_at": "YYYYMMDDTHHMMSSZ"
+    }
+  }
+}

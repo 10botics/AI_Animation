@@ -85,7 +85,7 @@ Mirror [stage_01_ingest.md](../../../Frierien-chapter081/stage_01_ingest.md):
 | **Beat** | Bn |
 | **Characters** | on-screen + vicinity (see §D) |
 | **What we see** | blocking, props, dialogue beat |
-| **Continuity** | wardrobe, ref `panels/panel_sxxx.png`, VFX notes |
+| **Continuity** | wardrobe, ref `panels/eng/panel_sxxx.png`, VFX notes |
 
 Per-page **summary table** (page → shot count → beats) helps audits.
 
@@ -102,7 +102,7 @@ Per-page **summary table** (page → shot count → beats) helps audits.
 - [ ] Panel order on each multi-panel page follows **RTL** + balloons; suspicious LTR legacy re-checked
 - [ ] Each shot has **Beat** + **Layer** + **Characters (on-screen | vicinity)**
 - [ ] Gutter/tier pages: **Layer** matches story, not gutter color alone
-- [ ] Stage 2 → Stage 3 chain consistent; refs `panels/panel_s*.png` noted where crops exist
+- [ ] Stage 2 → Stage 3 chain consistent; refs `panels/eng/panel_s*.png` noted where crops exist
 - [ ] Handoff: downstream agents read [`nano-banana-2-prompting`](../nano-banana-2-prompting/SKILL.md) only **after** this ingest is trusted
 ```
 
@@ -126,4 +126,4 @@ Steps: (1) Stage 1 page list + RTL + beats (2) Stage 2 full shot table with Char
 | `docs/flux-2-pro-prompting-guide.md` | Stage 4 edit lessons (name historical) |
 | `.cursor/skills/nano-banana-2-prompting/SKILL.md` | Stage 4 still workflow |
 | `manga-to-anime-fal-stages.plan.md` | Full pipeline diagram |
-| `.cursor/skills/manga-panel-crop-for-shots/SKILL.md` | **Extract** `panels/panel_s###.png` from `NNN.jpg` per shot |
+| `.cursor/skills/manga-panel-crop-for-shots/SKILL.md` | **Extract** `panels/eng/panel_s###.png` from `NNN.jpg` per shot |

@@ -1,9 +1,9 @@
 """
 S007 — Kling 2.6 Pro **image-to-video** from an approved Stage 4 still.
 
-Default start frame: **`Tests/Final/`** — layered camp composite (**translucent Frieren** upper; **Stark** + **Fern** below; Fern holds **grimoire**).
-
-**MCU composite** + memory grammar → default **`duration` \"10\"** (slower than locked **S006** MS).
+**MCU composite** — translucent Frieren upper; Stark + Fern below; Fern holds grimoire.
+Default: **`Tests/Final/S007_nano-banana-2-edit_20260330T042742Z.png`**, **`duration` \"10\"**.
+**`--anime-limited`** (default), **`--audio`** for native foley.
 
 Requires: `FAL_KEY` in project `.env`, package `fal-client`.
 """
@@ -13,6 +13,8 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -31,11 +33,9 @@ from fal_common import (
 SHOT_ID = "S007"
 MODEL_ID = "fal-ai/kling-video/v2.6/pro/image-to-video"
 
-DEFAULT_START = (
-    ROOT / "Tests" / "Final" / "S007_nano-banana-2-edit_20260330T042742Z.png"
-)
+DEFAULT_START = ROOT / "Tests" / "Final" / "S007_nano-banana-2-edit_20260330T042742Z.png"
 
-NEGATIVE = (
+NEGATIVE_BASE = (
     "blur, distort, low quality, manga panel, speech bubble, halftone, "
     "extra limbs, morphing face, duplicate Frieren, duplicate Fern, duplicate Stark, text, watermark, "
     "looking at camera, fourth wall, ghost Frieren becoming fully solid body, "
@@ -43,47 +43,67 @@ NEGATIVE = (
     "wide camp reframe, S002 establishing pull-back"
 )
 
-MOTION_PROMPT = (
-    "Fantasy anime television, **daytime** Northern forest camp — **same layered composition as the reference**: "
-    "**soft translucent Frieren** memory portrait **in the upper field**; **solid Stark** and **Fern** **seated below**; "
-    "**Fern** holds the **thick grimoire** — **do not** reframe or flatten layers into one plane. "
-    "**Camera:** **locked** — **no zoom**, **no pan**; imperceptible stability drift only. "
-    "**Frieren echo:** **subtle** dreamlike motion — **gentle** opacity **shimmer**, **micro** drift or **soft** highlight crawl; "
-    "**stays** ghostly — **never** hardens into a second full solid figure beside Stark. "
-    "**Stark:** **minimal** living read — **small** shift of weight, **slow** blink, **breath**; **axe strap** fabric barely moves; **no** standing into hero pose. "
-    "**Fern:** **profile** engagement toward Stark — **tiny** adjustment of the **book** in her lap, **light** scarf and **purple hair** from breeze; **no** spin to camera. "
-    "**Campfire** if in lower corner: **soft flame** flicker and **thin smoke**. "
-    "Environment: cool daylight, leaf **whisper**, shallow depth. "
-    "**One continuous beat**, no cuts, **no manga texture**, **no on-screen text**."
+NEGATIVE_ANIME_EXTRA = (
+    "smooth cg camera orbit, mocap glide, hyperreal motion smear, "
+    "continuous 3d parallax tour, gimbal float, lip-sync mouth flapping, dialogue animation"
+)
+
+MOTION_PROMPT_CINEMATIC = (
+    "Fantasy anime, daytime Northern forest camp — same layered composition as the reference: "
+    "soft translucent Frieren memory portrait in the upper field; solid Stark and Fern seated below; "
+    "Fern holds the thick grimoire — do not reframe or flatten layers into one plane. "
+    "Camera locked, no zoom, no pan, imperceptible drift only. "
+    "Frieren echo: subtle opacity shimmer, micro drift or soft highlight crawl; stays ghostly, never a second solid body beside Stark. "
+    "Stark: minimal weight shift, slow blink, breath, axe strap fabric barely moves; no hero stand pose. "
+    "Fern: tiny book adjustment in lap, scarf and purple hair in breeze; profile toward Stark, no spin to camera. "
+    "Campfire if visible: soft flame flicker and thin smoke. "
+    "Cool daylight, leaf whisper, shallow depth. One continuous beat, no cuts, no manga texture, no on-screen text."
+)
+
+MOTION_PROMPT_ANIME_LIMITED = (
+    "Fantasy broadcast anime television, cel-shaded, limited-animation timing — preserve exact layered reference layout: "
+    "translucent memory figure upper field; solid warrior and traveler seated below with grimoire; "
+    "do not flatten vertical stack or swap layers. "
+    "Motion grammar — hand-drawn TV anime, not 3D: short pose holds, discrete beats, gentle staccato like animation on twos, "
+    "not mocap glide. Keep movement small and slow. "
+    "Upper memory layer: softest opacity pulse or micro drift only, stays ethereal, never solidifies into a third seated figure. "
+    "Lower figures: micro blink and breath on the warrior; tiny book edge flutter and hair or scarf drift on the traveler; "
+    "no lip-sync, no turn to lens. "
+    "Campfire embers: simple flicker if in frame. "
+    "Camera almost locked 2D anime plate, hairline tremor at most; no dolly, no parallax tour. "
+    "One continuous take, no cuts, no manga halftone, no text."
+)
+
+AUDIO_TAIL = (
+    " Ambient forest camp day: soft wind in trees, campfire crackle and thin smoke, light cloth rustle, "
+    "faint dreamy tone on the upper memory layer; no speech, no dialogue, no singing, no music score."
 )
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="S007 → Kling 2.6 Pro I2V (layered MCU composite)"
-    )
-    parser.add_argument(
-        "--start-image",
-        type=Path,
-        default=DEFAULT_START,
-        help=f"Hero still PNG (default: Tests/Final/{DEFAULT_START.name})",
-    )
+    parser = argparse.ArgumentParser(description="S007 → Kling 2.6 Pro I2V (layered MCU composite)")
+    parser.add_argument("--start-image", type=Path, default=DEFAULT_START, help="Hero still PNG")
     parser.add_argument(
         "--duration",
         choices=("5", "10"),
         default="10",
-        help='Kling duration: default "10" for layered memory + dual figure read (use "5" for tighter)',
+        help='Default "10" for layered read ("5" for tighter test)',
+    )
+    parser.add_argument("--audio", action="store_true", help="generate_audio true (higher cost)")
+    parser.add_argument(
+        "--anime-limited",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="TV-anime limited-animation prompt (default on)",
     )
     parser.add_argument(
-        "--audio",
-        action="store_true",
-        help="Set generate_audio true (higher cost; default off)",
+        "--anime-fps",
+        type=int,
+        default=12,
+        metavar="N",
+        help="ffmpeg fps post-pass (0=skip). Default 12.",
     )
-    parser.add_argument(
-        "--dry-run",
-        action="store_true",
-        help="Print planned arguments and exit without calling Fal",
-    )
+    parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
     start_path = args.start_image.resolve()
 
@@ -110,12 +130,17 @@ def main() -> int:
     start_url = fal_client.upload_file(str(start_path))
     print(f"start_image_url: {start_url}", flush=True)
 
+    motion = MOTION_PROMPT_ANIME_LIMITED if args.anime_limited else MOTION_PROMPT_CINEMATIC
+    if args.audio and AUDIO_TAIL.strip() not in motion:
+        motion = motion + AUDIO_TAIL
+    negative = NEGATIVE_BASE + (NEGATIVE_ANIME_EXTRA if args.anime_limited else "")
+
     arguments = {
-        "prompt": MOTION_PROMPT,
+        "prompt": motion,
         "start_image_url": start_url,
         "duration": args.duration,
         "generate_audio": args.audio,
-        "negative_prompt": NEGATIVE,
+        "negative_prompt": negative,
     }
 
     meta_path = out_dir / f"{SHOT_ID}_kling_i2v_meta_{ts}.json"
@@ -127,6 +152,8 @@ def main() -> int:
                 "start_image_local": str(start_path),
                 "start_image_url": start_url,
                 "arguments": arguments,
+                "anime_limited": args.anime_limited,
+                "anime_fps_post": args.anime_fps if args.anime_fps > 0 else None,
             },
             indent=2,
         ),
@@ -164,11 +191,85 @@ def main() -> int:
     ext = extension_from_url(vurl)
     if ext not in (".mp4", ".webm", ".mov"):
         ext = ".mp4"
-    dest = video_dir / f"{SHOT_ID}_kling-v26-pro_i2v_{ts}{ext}"
+    parts = ["anime" if args.anime_limited else "cine"]
+    if args.audio:
+        parts.append("audio")
+    if args.anime_fps > 0:
+        parts.append(f"{args.anime_fps}fps")
+    tag = "-".join(parts)
+    dest = video_dir / f"{SHOT_ID}_kling-v26-pro_i2v_{tag}_{ts}{ext}"
     print(f"Downloading: {vurl}", flush=True)
     download_file(vurl, dest)
     print(f"Saved: {dest}", flush=True)
+
+    if args.anime_fps > 0:
+        fps_dest = _downsample_fps(dest, args.anime_fps, ts)
+        if fps_dest:
+            print(f"Anime fps pass: {fps_dest}", flush=True)
+
     return 0
+
+
+def _probe_has_audio(ffmpeg: str, src: Path) -> bool:
+    ffprobe = shutil.which("ffprobe") or ffmpeg.replace("ffmpeg", "ffprobe")
+    if not Path(ffprobe).exists() and ffprobe == ffmpeg.replace("ffmpeg", "ffprobe"):
+        return False
+    try:
+        r = subprocess.run(
+            [
+                ffprobe,
+                "-v",
+                "error",
+                "-select_streams",
+                "a",
+                "-show_entries",
+                "stream=codec_type",
+                "-of",
+                "csv=p=0",
+                str(src),
+            ],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        return "audio" in (r.stdout or "")
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return False
+
+
+def _downsample_fps(src: Path, fps: int, ts: str) -> Path | None:
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffmpeg:
+        print("ffmpeg not on PATH — skip --anime-fps post-pass.", file=sys.stderr)
+        return None
+    out = src.with_name(f"{src.stem}_{fps}fps_{ts}{src.suffix}")
+    has_audio = _probe_has_audio(ffmpeg, src)
+    cmd = [
+        ffmpeg,
+        "-y",
+        "-i",
+        str(src),
+        "-vf",
+        f"fps={fps}",
+        "-c:v",
+        "libx264",
+        "-crf",
+        "18",
+        "-preset",
+        "medium",
+    ]
+    if has_audio:
+        cmd.extend(["-c:a", "aac", "-b:a", "192k"])
+    else:
+        cmd.append("-an")
+    cmd.append(str(out))
+    print(f"ffmpeg downsample to {fps} fps: {' '.join(cmd)}", flush=True)
+    try:
+        subprocess.run(cmd, check=True, capture_output=True, text=True)
+    except subprocess.CalledProcessError as e:
+        print(f"ffmpeg failed: {e.stderr}", file=sys.stderr)
+        return None
+    return out
 
 
 if __name__ == "__main__":

@@ -8,7 +8,7 @@ alwaysApply: false
 
 When **creating** or **modifying** prompts for **`fal-ai/nano-banana-2/edit`** (or the shared `*_PROMPT_FLUX` strings used by that endpoint):
 
-1. **Read and follow** the Agent Skill **[`.cursor/skills/nano-banana-2-prompting/SKILL.md`](../skills/nano-banana-2-prompting/SKILL.md)** (workflow + verification checklist). Before prompt-only tuning, ensure **`panels/panel_s*.png`** matches **`stage_02`** — see **[`manga-panel-crop-for-shots`](../skills/manga-panel-crop-for-shots/SKILL.md)** when creating or fixing crops.
+1. **Read and follow** the Agent Skill **[`.cursor/skills/nano-banana-2-prompting/SKILL.md`](../skills/nano-banana-2-prompting/SKILL.md)** (workflow + verification checklist). Before prompt-only tuning, ensure **`panels/eng/panel_s*.png`** matches **`stage_02`** — see **[`manga-panel-crop-for-shots`](../skills/manga-panel-crop-for-shots/SKILL.md)** when creating or fixing crops.
 2. **Read** [docs/flux-2-pro-prompting-guide.md](../../docs/flux-2-pro-prompting-guide.md) for edit-flow lessons, shot file roles, and QC logging (guide name is historical; **Nano is the default renderer**).
 3. Prefer **small edits**; avoid hex walls that override **reference** layout. Log repeat failures in `Frierien-chapter081/stage_04_*_visual_qc_log.md`.
 

@@ -7,7 +7,7 @@ S005 — **present** CU: **Fern** + **Lernen** memory telegraph (`002.jpg` botto
 - **Legacy:** `fal-ai/flux-2-pro/edit` — `--model flux-2-pro-edit`.
 - **`--model both`** — one upload, Flux then Nano Banana.
 
-Default ref: **`panels/panel_s005.png`**. Pass `--ref` to override.
+Default ref: **`panels/eng/panel_s005.png`**. Pass `--ref` to override.
 """
 
 from __future__ import annotations
@@ -21,6 +21,7 @@ from pathlib import Path
 
 import fal_client
 
+from panel_paths import PANELS_ENG
 from fal_common import (
     ROOT,
     S005_PROMPT_FLUX,
@@ -33,7 +34,7 @@ from fal_common import (
 
 SHOT_ID = "S005"
 
-DEFAULT_REF = ROOT / "panels" / "panel_s005.png"
+DEFAULT_REF = PANELS_ENG / "panel_s005.png"
 
 FLUX_PRO_EDIT_SLUG = "flux-2-pro-edit"
 FLUX_PRO_EDIT_MODEL_ID = "fal-ai/flux-2-pro/edit"

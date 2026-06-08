@@ -1,6 +1,6 @@
 """
 S011 — Kling 2.6 Pro I2V: **MCU** **Stark** alone — **awe** at **gold** horizon, gaze **toward frame LEFT**
-(`panels/panel_s011.png` beat; driver `Tests/Final/`).
+(`panels/eng/panel_s011.png` beat; driver `Tests/Final/`).
 
 Requires: `FAL_KEY` in `.env`, `fal-client`.
 """
