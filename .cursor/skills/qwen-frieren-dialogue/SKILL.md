@@ -153,8 +153,8 @@ After dialogue WAV is approved, run [`scripts/lipsync_fal.py`](../../../scripts/
 
 ```powershell
 python lipsync_fal.py `
-  --video ..\outputs\video\final\S008_kling-v26-pro_i2v_natural-audio_20260527T092816Z.mp4 `
-  --audio ..\outputs\voice\final\S008\s008_frieren_frieren_dialogue_v14_ja_20260603T050516Z.wav `
+  --video ..\outputs\video\final\S008_kling-v26-pro_i2v_natural-audio_20260527_092816.mp4 `
+  --audio ..\outputs\voice\final\S008\s008_frieren_frieren_dialogue_v14_ja_20260603_050516.wav `
   --start-sec 2.05 --tag frieren_dialogue_v14_ja
 ```
 
@@ -173,6 +173,7 @@ Silent base Kling + clean stem only. S008 MS / partial face — motion may stay 
 | S008 | Frieren | This skill |
 | S012 | Frieren | [`panels/jap/panel_s012jap.png`](../../../panels/jap/panel_s012jap.png) · `outputs/voice/final/S012/` · [`generate_s012_dialogue.py`](../../../scripts/generate_s012_dialogue.py) |
 | S016 | Frieren | [`panels/jap/panel_s015jap.png`](../../../panels/jap/panel_s015jap.png) · `outputs/voice/final/S016/` · [`generate_s016_dialogue.py`](../../../scripts/generate_s016_dialogue.py) · [`docs/s016-frieren-qwen-dialogue-log.md`](../../../docs/s016-frieren-qwen-dialogue-log.md) |
+| S016 | Denken | [`qwen-denken-dialogue`](../qwen-denken-dialogue/SKILL.md) · [`panels/jap/panel_s016jap.png`](../../../panels/jap/panel_s016jap.png) · [`generate_s016_denken_dialogue.py`](../../../scripts/generate_s016_denken_dialogue.py) |
 | S012 | Stark (reaction) | [`qwen-stark-dialogue`](../qwen-stark-dialogue/SKILL.md) · [`docs/stark-qwen-personality-guide.md`](../../../docs/stark-qwen-personality-guide.md) |
 
 **Master formula (all characters):** [`docs/qwen-voice-pipeline-formula.md`](../../../docs/qwen-voice-pipeline-formula.md)

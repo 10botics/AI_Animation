@@ -146,6 +146,7 @@ flowchart LR
 - Full sound design, scoring, professional mix.
 - Accurate lip-sync to dialogue (unless you add tooling).
 - Automatic reading of all bubble text via OCR (optional; manual beat descriptions are enough for testing).
+- **Pipeline dashboard (learner browser + pro Cursor Canvas)** — design log: [`docs/pipeline-dashboard-design-log.md`](docs/pipeline-dashboard-design-log.md).
 
 ---
 

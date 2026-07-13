@@ -24,9 +24,9 @@ S008_BASE_VIDEO = (
     / "outputs"
     / "video"
     / "final"
-    / "S008_kling-v26-pro_i2v_natural-audio_20260527T092816Z_frieren_dialogue_v11_20260602T103647Z.mp4"
+    / "S008_kling-v26-pro_i2v_natural-audio_20260527_092816_frieren_dialogue_v11_20260602_103647.mp4"
 )
-S008_DIALOGUE_AUDIO = ROOT / "outputs" / "voice" / "S008" / "s008_frieren_20260602T103112Z.mp3"
+S008_DIALOGUE_AUDIO = ROOT / "outputs" / "voice" / "S008" / "s008_frieren_20260602_103112.mp3"
 S008_DIALOGUE_START_SEC = 2.05
 
 

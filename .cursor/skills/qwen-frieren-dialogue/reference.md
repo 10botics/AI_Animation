@@ -7,13 +7,13 @@ Companion to [SKILL.md](SKILL.md). Read when debugging quality, reproducing v11,
 ## Approved deliverable (2026-06-02, EN ref)
 
 ```
-outputs/video/final/S008_kling-v26-pro_i2v_natural-audio_20260527T092816Z_frieren_dialogue_v11_20260602T103647Z.mp4
+outputs/video/final/S008_kling-v26-pro_i2v_natural-audio_20260527_092816_frieren_dialogue_v11_20260602_103647.mp4
 ```
 
 ## JP ref trial (2026-06-03)
 
 ```
-outputs/video/final/S008_kling-v26-pro_i2v_natural-audio_20260527T092816Z_frieren_dialogue_v12_20260603T045232Z.mp4
+outputs/video/final/S008_kling-v26-pro_i2v_natural-audio_20260527_092816_frieren_dialogue_v12_20260603_045232.mp4
 ```
 
 - **Engine:** Qwen3 1.7B (Fal clone + TTS)
@@ -42,13 +42,13 @@ outputs/video/final/S008_kling-v26-pro_i2v_natural-audio_20260527T092816Z_friere
 
 | Tag | Location | Notes |
 |-----|----------|-------|
-| v4 | `outputs/voice/S008/iterations/S008_frieren_qwen_v4_20260602T035231Z.mp4` | 130s ref timbre benchmark |
+| v4 | `outputs/voice/S008/iterations/S008_frieren_qwen_v4_20260602_035231.mp4` | 130s ref timbre benchmark |
 | v6 | `iterations/S008_frieren_qwen_v6_*.mp4` | Curated 15s ref |
 | v7 | `iterations/S008_frieren_qwen_v7_*.mp4` | 1min Demucs chain |
 | v8 | `outputs/video/final/*_frieren_dialogue_v8_*.mp4` | Scene prompt |
 | v9 | `outputs/video/final/*_frieren_dialogue_v9_*.mp4` | Scene prompt (single clip) |
 | v10 | `outputs/video/final/*_frieren_dialogue_v10_*.mp4` | Split phrase; hitch |
-| **v11** | `outputs/video/final/*_frieren_dialogue_v11_20260602T103647Z.mp4` | **Ship** |
+| **v11** | `outputs/video/final/*_frieren_dialogue_v11_20260602_103647.mp4` | **Ship** |
 
 Compare folder (historical backends): `outputs/voice/S008/compare/`
 

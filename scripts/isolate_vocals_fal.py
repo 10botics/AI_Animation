@@ -56,7 +56,7 @@ def isolate_vocals(
 ) -> dict:
     work = ROOT / "outputs" / "voice" / "isolation"
     work.mkdir(parents=True, exist_ok=True)
-    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     raw = work / f"{input_path.stem}_{ts}_full.wav"
     _extract_wav(input_path, raw)
 

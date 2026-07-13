@@ -11,10 +11,12 @@ The repo ships **pipeline code and docs** only. **Chapter folders** (page scans,
 | **Stages 1–3** (local `Frierien-chapterNNN/stage_01_ingest.md`, `stage_02_shot_list.md`, `stage_03_series_bible.md`) | Canon for page order, beats, shots (**S00x**), and style notes — **not in git** |
 | **`panels/eng/panel_s###.png`** | Single-panel crops used as **edit references** for Nano Banana |
 | **`scripts/fal_common.py`** | Shared **`S###_PROMPT_FLUX`** bodies (one string per shot for all backends) |
-| **`scripts/generate_s###_ref_edit.py`** | Stage **4**: image edit (**Nano Banana 2** by default) → PNG under `Tests/` |
-| **`scripts/generate_s###_kling_i2v.py`** | Stage **5** (optional): **Kling 2.6 Pro** image-to-video → MP4 under `outputs/video/` |
+| **`scripts/generate_s006_*.py`** | **Examples** in git — copy/adapt per shot with Cursor Agent |
+| **`scripts/generate_s###_*.py`** | Other shots — **local only** (gitignored); add as you work each scene |
 | **`Tests/Final/`** | “Hero” stills you approve for defaults and I2V drivers |
 | **`docs/`** | Prompting guides, greyscale→color notes, Stage 5 handbook |
+
+**Mentor pack (not on GitHub):** run `python scripts/build_mentor_pack_zip.py` → `AI_Animation-mentor-pack.zip`. Extract into the project root (`Chapter-81/`, `Voice Reference/`, and `.env` with blank `FAL_KEY=`). Students create `panels/`, `Tests/`, and `outputs/` during the lesson.
 
 End-to-end stage intent is also summarized in [`manga-to-anime-fal-stages.plan.md`](manga-to-anime-fal-stages.plan.md).
 
@@ -37,17 +39,17 @@ Edit **`.env`** and set `FAL_KEY=` to your key. **Never commit `.env`** (it is g
 
 ## Quick start — one still (Stage 4)
 
-From the repo root, run a shot’s edit script (example **S009**):
+From the repo root, run the **S006** example (copy this pattern for other shots):
 
 ```powershell
 cd scripts
-python generate_s009_ref_edit.py
+python generate_s006_ref_edit.py
 ```
 
-- Default **`--ref`** is `panels/eng/panel_s009.png` unless the script docstring says otherwise.
+- Default **`--ref`** is `panels/eng/panel_s006.png` (create the crop locally or via the dashboard).
 - Default model is **`nano-banana-2-edit`**; some scripts support **`--model flux-2-pro-edit`** for legacy runs.
 
-Outputs land under `Tests/` and `outputs/fal/` (see script stdout).
+Outputs land under `shots/S006/still/wip/` (see script stdout).
 
 ## Quick start — one clip (Stage 5)
 
@@ -55,21 +57,56 @@ Use an approved PNG (often under `Tests/Final/`) as **`--start-image`** when the
 
 ```powershell
 cd scripts
-python generate_s009_kling_i2v.py --experiment 3 --start-image "..\Tests\Final\S009_nano-banana-2-edit_20260330T055707Z.png"
+python generate_s006_kling_i2v.py --start-image "..\shots\S006\still\approved\<timestamp>.png"
 ```
 
 See [`docs/stage5-image-to-video-fal.md`](docs/stage5-image-to-video-fal.md) for model id, **`duration`**, **`negative_prompt`**, and cost notes.
 
+## Beginner dashboard (AI Animation Studio)
+
+Local progress board for learners — **no Streamlit account**. Read-only; copy prompts into Cursor Agent to generate.
+
+```powershell
+# One-click (creates .venv + installs deps on first run):
+.\Start-Studio.bat
+
+# Or manually:
+pip install -r requirements.txt
+streamlit run scripts/beginner_dashboard.py
+```
+
+CLI progress scan: `python scripts/pipeline_status.py --shot S006`
+
 ## Repository layout (short)
 
 ```
-Frierien-chapterNNN/   # Local only — pages + stage_01–03 + stage_04 QC (gitignored)
+Chapter-81/            # Local only — pages + stage_01–03 + stage_04 QC (gitignored)
 panels/                # Per-shot manga crops (gitignored)
-scripts/               # fal_common.py + generate_*_ref_edit.py + generate_*_kling_i2v.py
+shots/                 # Per-shot production files (gitignored) — see below
+scripts/               # fal_common.py + generate_* + artifact_paths.py
 docs/                  # Prompting / pipeline docs
-Tests/Final/           # Approved hero stills (gitignored)
-outputs/               # Generated logs, JSON, video (gitignored)
+Tests/                 # Legacy still WIP/Final (optional after migration)
+outputs/               # Fal logs, SFX, analysis (gitignored)
 .cursor/skills/        # Cursor Agent Skills for prompts + ingest
+```
+
+### Shot folders (`shots/S###/`)
+
+Each shot keeps **WIP history** under `wip/{model}/` (UTC timestamp filenames: **`YYYYMMDD_HHMMSS`**) and **fixed approved paths** for the next pipeline step:
+
+| Step | WIP example | Approved |
+|------|-------------|----------|
+| Still | `still/wip/nano-banana-2/20260330_035743.png` | `still/approved/20260330_035743.png` |
+| Voice | `voice/wip/qwen/frieren_20260710_091920.wav` | `voice/approved/frieren.wav` |
+| Video | `video/wip/seedance-2/20260527_054046.mp4` | `video/approved/20260527_054046.mp4` |
+| Lip-sync | `lipsync/wip/pixverse/20260604_045309.mp4` | `lipsync/approved/20260604_045309.mp4` |
+| SFX (per shot) | `sfx/wip/cassetteai/01_ambient_20260402_043520.wav` | — |
+| BGM (chapter) | `audio/bgm/wip/minimax/prototype_20260529_075424.mp3` | `audio/bgm/approved/prototype_20260529_075424.mp3` |
+
+Normalize existing media into this layout:
+
+```powershell
+python scripts/normalize_artifacts.py
 ```
 
 ## Cursor / contributors
@@ -77,6 +114,8 @@ outputs/               # Generated logs, JSON, video (gitignored)
 **Students / interns:** [`docs/cursor-student-workbook.md`](docs/cursor-student-workbook.md) — [Cursor guide PDF](docs/cursor-student-workbook-en-cursor-guide.pdf) → [Setup PDF](docs/cursor-student-workbook-en-setup.pdf) → [S006 PDF](docs/cursor-student-workbook-en-s006-first-try.pdf) → [Skills reference](docs/cursor-student-workbook-en.pdf) · [粵語](docs/cursor-student-workbook-yue.md).
 
 Agent-oriented workflows live in **`.cursor/skills/`** (e.g. nano-banana prompting, panel crops, I2V motion wording). They assume you keep **Stages 1–3** truthful before trusting `fal_common.py` for a given **S###**.
+
+**Future (demo):** beginner **AI Animation Studio** — double-click `Start-Studio.bat` or run `streamlit run scripts/beginner_dashboard.py`; design log [`docs/pipeline-dashboard-design-log.md`](docs/pipeline-dashboard-design-log.md).
 
 ## Legal / IP
 

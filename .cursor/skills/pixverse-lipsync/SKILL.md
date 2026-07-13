@@ -61,9 +61,9 @@ Ship after QC: copy **MP4 only** to `outputs/video/final/Voice Added/` or shot f
 
 Base videos:
 
-- S004: `S004_kling-v26-pro_i2v_anime-audio-12fps_20260527T065906Z_12fps_20260527T065906Z.mp4`
-- S008: `S008_kling-v26-pro_i2v_natural-audio_20260604T045001Z.mp4`
-- S011: `S011_seedance-2-i2v-audio_20260527T090828Z.mp4`
+- S004: `S004_kling-v26-pro_i2v_anime-audio-12fps_20260527_065906_12fps_20260527_065906.mp4`
+- S008: `S008_kling-v26-pro_i2v_natural-audio_20260604_045001.mp4`
+- S011: `S011_seedance-2-i2v-audio_20260527_090828.mp4`
 
 ---
 

@@ -169,7 +169,7 @@ Steps: (1) Read stage_02 row + stage_03 PREFIX for Layer (2) Pick Final still �
 
 ## 7. Example — apply skill (Kling 2.6) for **S010**
 
-**Context (stages 1–3):** `present`, WS HERO, golden Weise ridge — three travelers **backs to camera**, valley + city **gold**; beat **B3**. Stills: e.g. [`Tests/S010_flux-2-pro-edit_20260326T094807Z.png`](../../../Tests/S010_flux-2-pro-edit_20260326T094807Z.png).
+**Context (stages 1–3):** `present`, WS HERO, golden Weise ridge — three travelers **backs to camera**, valley + city **gold**; beat **B3**. Stills: e.g. [`Tests/S010_flux-2-pro-edit_20260326_094807.png`](../../../Tests/S010_flux-2-pro-edit_20260326_094807.png).
 
 **Motion prompt (paste as `prompt`):**
 

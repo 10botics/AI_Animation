@@ -1,10 +1,10 @@
 # S008 Frieren Qwen3 dialogue — project log
 
 **Status (2026-06-02):** Approved baseline — **v11** split-phrase TTS + smooth concat.  
-**Best deliverable (EN ref v11):** `..._frieren_dialogue_v11_20260602T103647Z.mp4`  
-**JP ref trial (v12):** `..._frieren_dialogue_v12_20260603T045232Z.mp4` (clone from `fireren Japan.mp4`, EN line text)  
+**Best deliverable (EN ref v11):** `..._frieren_dialogue_v11_20260602_103647.mp4`  
+**JP ref trial (v12):** `..._frieren_dialogue_v12_20260603_045232.mp4` (clone from `fireren Japan.mp4`, EN line text)  
 **JP TTS (v13_ja):** `..._frieren_dialogue_v13_ja_*.wav` — had ICL **"ta"** prefix each phrase (ref ended 良かった)  
-**JP TTS (v14_ja):** `outputs/voice/final/S008/s008_frieren_frieren_dialogue_v14_ja_20260603T050516Z.wav` — ref tail silence + no `reference_text` on phrase TTS
+**JP TTS (v14_ja):** `outputs/voice/final/S008/s008_frieren_frieren_dialogue_v14_ja_20260603_050516.wav` — ref tail silence + no `reference_text` on phrase TTS
 
 **Skill:** [`.cursor/skills/qwen-frieren-dialogue/SKILL.md`](../.cursor/skills/qwen-frieren-dialogue/SKILL.md)
 
@@ -31,8 +31,8 @@ Replace Kling native dialogue on **S008** with **English dub–matched Frieren**
 
 **Delivery:** Dry idiom pivot + pragmatic yes — **not** bubbly; subtle magic-geek spark only. Contrasts B2 indifference (S004–S006). Not golden-Weise awe (S010+).
 
-**Base video (current):** `outputs/video/final/S008_kling-v26-pro_i2v_natural-audio_20260604T045001Z.mp4` — Kling rerun: stable Frieren grimoire hands, Stark face frozen (no blink).  
-**Previous base:** `..._natural-audio_20260527T092816Z.mp4` (hand/blink drift).  
+**Base video (current):** `outputs/video/final/S008_kling-v26-pro_i2v_natural-audio_20260604_045001.mp4` — Kling rerun: stable Frieren grimoire hands, Stark face frozen (no blink).  
+**Previous base:** `..._natural-audio_20260527_092816.mp4` (hand/blink drift).  
 **Mux start:** `FRIEREN_DIALOGUE_START_SEC = 2.05` in `scripts/qwen_tts.py`.
 
 ---
@@ -117,7 +117,7 @@ Replace Kling native dialogue on **S008** with **English dub–matched Frieren**
 | v6–v7 | `iterations/S008_frieren_qwen_v6|v7_*.mp4` | Curated ref / 1min vocals |
 | v8–v9 | `*_frieren_dialogue_v8|v9_*.mp4` | Scene-grounded prompt |
 | v10 | `*_frieren_dialogue_v10_*.mp4` | Split phrases; **hitch at join** |
-| **v11** | `*_frieren_dialogue_v11_20260602T103647Z.mp4` | **Approved** — smooth concat |
+| **v11** | `*_frieren_dialogue_v11_20260602_103647.mp4` | **Approved** — smooth concat |
 
 Approved WAV: `outputs/voice/final/S008/` · drafts/meta: `outputs/voice/S008/`
 
@@ -171,22 +171,22 @@ After Qwen mux, drive mouth motion with [`scripts/lipsync_fal.py`](../../scripts
 ```powershell
 cd scripts
 python lipsync_fal.py --model pixverse `
-  --video ..\outputs\video\final\S008_kling-v26-pro_i2v_natural-audio_20260604T045001Z.mp4 `
-  --audio ..\outputs\voice\final\S008\s008_frieren_frieren_dialogue_v14_ja_20260603T050516Z.wav `
+  --video ..\outputs\video\final\S008_kling-v26-pro_i2v_natural-audio_20260604_045001.mp4 `
+  --audio ..\outputs\voice\final\S008\s008_frieren_frieren_dialogue_v14_ja_20260603_050516.wav `
   --start-sec 2.05 --tag frieren_dialogue_v14_ja
 ```
 
 | Run | Output |
 |-----|--------|
-| **v14_ja + PixVerse** (2026-06-04, new base) | `outputs/video/LipsyncTests/S008_kling-v26-pro_i2v_natural-audio_20260604T045001Z_frieren_dialogue_v14_ja_pixverse_20260604T045309Z.mp4` |
-| ~~v14_ja + PixVerse~~ (old base) | `..._20260527T092816Z_..._pixverse_20260604T040712Z.mp4` |
+| **v14_ja + PixVerse** (2026-06-04, new base) | `outputs/video/LipsyncTests/S008_kling-v26-pro_i2v_natural-audio_20260604_045001_frieren_dialogue_v14_ja_pixverse_20260604_045309.mp4` |
+| ~~v14_ja + PixVerse~~ (old base) | `..._20260527_092816_..._pixverse_20260604_040712.mp4` |
 
 Legacy kling trial:
 
 ```powershell
 python lipsync_fal.py `
-  --video ..\outputs\video\final\S008_kling-v26-pro_i2v_natural-audio_20260604T045001Z.mp4 `
-  --audio ..\outputs\voice\S008\s008_frieren_20260602T103112Z.mp3 `
+  --video ..\outputs\video\final\S008_kling-v26-pro_i2v_natural-audio_20260604_045001.mp4 `
+  --audio ..\outputs\voice\S008\s008_frieren_20260602_103112.mp3 `
   --start-sec 2.05 --model kling
 ```
 
@@ -208,13 +208,13 @@ Uses **`FAL_KEY`** only — [`fal-ai/heygen/v3/lipsync/precision`](https://fal.a
 cd scripts
 # HeyGen requires speech in the source video — use muxed v11 (not silent Kling alone)
 python lipsync_fal.py --model heygen-precision `
-  --dialogue-video ..\outputs\video\final\S008_kling-v26-pro_i2v_natural-audio_20260527T092816Z_frieren_dialogue_v11_20260602T103647Z.mp4 `
-  --audio ..\outputs\voice\S008\s008_frieren_20260602T103112Z.mp3 --start-sec 2.05 --tag lipsync_v11
+  --dialogue-video ..\outputs\video\final\S008_kling-v26-pro_i2v_natural-audio_20260527_092816_frieren_dialogue_v11_20260602_103647.mp4 `
+  --audio ..\outputs\voice\S008\s008_frieren_20260602_103112.mp3 --start-sec 2.05 --tag lipsync_v11
 python heygen_lipsync.py --mode precision --tag lipsync_v11
 ```
 
 | Run | Output |
 |-----|--------|
-| v11 + HeyGen precision | `..._frieren_dialogue_v11_..._lipsync_v11_heygen-precision_20260603T024933Z.mp4` |
+| v11 + HeyGen precision | `..._frieren_dialogue_v11_..._lipsync_v11_heygen-precision_20260603_024933.mp4` |
 
 Silent base alone returns Fal error: *No speech detected in the input video*.

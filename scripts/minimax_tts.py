@@ -105,7 +105,7 @@ def main() -> int:
     if args.out:
         out_path = args.out.resolve()
     else:
-        ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         label = (args.character or "voice").replace(" ", "_")
         out_path = ROOT / "outputs" / "voice" / f"{label}_{ts}.mp3"
 

@@ -37,10 +37,10 @@ python generate_s006_fern_dialogue.py --skip-clone --language Japanese --tag fer
 
 | Tag | WAV |
 |-----|-----|
-| `fern_dialogue_v1_ja` | `outputs/voice/final/S006/s006_fern_fern_dialogue_v1_ja_20260604T103716Z.wav` (~2.14s) |
+| `fern_dialogue_v1_ja` | `outputs/voice/final/S006/s006_fern_fern_dialogue_v1_ja_20260604_103716.wav` (~2.14s) |
 
 ## Lip-sync
 
-**Base I2V (10s):** `outputs/video/final/S006_kling-v26-pro_i2v_anime-audio-12fps_20260605T015128Z_12fps_20260605T015128Z.mp4`
+**Base I2V (10s):** `outputs/video/final/S006_kling-v26-pro_i2v_anime-audio-12fps_20260605_015128_12fps_20260605_015128.mp4`
 
 Lip-sync: [`pixverse-lipsync`](../.cursor/skills/pixverse-lipsync/SKILL.md) — Fern @ **0.35s**, Frieren @ **0.55s**.

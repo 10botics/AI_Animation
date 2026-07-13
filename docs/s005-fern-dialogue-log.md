@@ -27,7 +27,7 @@
 
 **Delivery:** Formal letter read; quiet weight; respectful *-sama*; not alarmed, not cheerful.
 
-**Base video:** `outputs/video/final/S005_kling-v26-pro_i2v_anime-audio-12fps_20260527T073521Z_12fps_20260527T073521Z.mp4` (~10s).  
+**Base video:** `outputs/video/final/S005_kling-v26-pro_i2v_anime-audio-12fps_20260527_073521_12fps_20260527_073521.mp4` (~10s).  
 **Default mux start:** `1.85s` (`FERN_S005_DIALOGUE_START_SEC`).
 
 ---
@@ -47,21 +47,21 @@
 | `fern_dialogue_v2_ja` | **Use** — 2 TTS clips; pause **only** after いえ、 |
 | ~~v1_ja~~ | 3 clips + 0.5s between **every** phrase (wrong gap between 2↔3) |
 
-**Deliverable (v2):** `outputs/voice/final/S005/s005_fern_fern_dialogue_v2_ja_20260604T081410Z.wav` (~5.8s vs v1 ~6.3s)
+**Deliverable (v2):** `outputs/voice/final/S005/s005_fern_fern_dialogue_v2_ja_20260604_081410.wav` (~5.8s vs v1 ~6.3s)
 
 ## Lip-sync (PixVerse)
 
 ```powershell
 python lipsync_fal.py `
-  --video "..\outputs\video\final\S005_kling-v26-pro_i2v_anime-audio-12fps_20260527T073521Z_12fps_20260527T073521Z.mp4" `
-  --audio "..\outputs\voice\final\S005\s005_fern_fern_dialogue_v2_ja_20260604T081410Z.wav" `
+  --video "..\outputs\video\final\S005_kling-v26-pro_i2v_anime-audio-12fps_20260527_073521_12fps_20260527_073521.mp4" `
+  --audio "..\outputs\voice\final\S005\s005_fern_fern_dialogue_v2_ja_20260604_081410.wav" `
   --start-sec 1.85 --tag fern_dialogue_v2_ja
 ```
 
 | Run | Output |
 |-----|--------|
-| v2_ja + PixVerse (full frame) | `..._fern_dialogue_v2_ja_pixverse_20260604T081659Z.mp4` |
-| v2_ja + PixVerse **ROI** | `..._fern_dialogue_v2_ja_pixverse_roi_20260604T082234Z.mp4` — `lipsync_fal_roi.py --shot S005` |
+| v2_ja + PixVerse (full frame) | `..._fern_dialogue_v2_ja_pixverse_20260604_081659.mp4` |
+| v2_ja + PixVerse **ROI** | `..._fern_dialogue_v2_ja_pixverse_roi_20260604_082234.mp4` — `lipsync_fal_roi.py --shot S005` |
 
 ## Engine (MiniMax — fallback)
 

@@ -47,12 +47,12 @@ python generate_s006_dialogue.py --skip-clone --language Japanese --tag frieren_
 python generate_s006_dialogue.py --skip-clone --language Japanese --balloon 1 --tag frieren_dialogue_b1_ja
 
 # Mux to base (warn: full line ~11s vs 5s clip)
-python generate_s006_dialogue.py --skip-clone --language Japanese --mux --video ..\outputs\video\final\S006_kling-v26-pro_i2v_anime-audio-12fps_20260527T073942Z_12fps_20260527T073942Z.mp4 --tag frieren_dialogue_v1_ja
+python generate_s006_dialogue.py --skip-clone --language Japanese --mux --video ..\outputs\video\final\S006_kling-v26-pro_i2v_anime-audio-12fps_20260527_073942_12fps_20260527_073942.mp4 --tag frieren_dialogue_v1_ja
 ```
 
-**Base video (10s, production):** `outputs/video/final/S006_kling-v26-pro_i2v_anime-audio-12fps_20260605T015128Z_12fps_20260605T015128Z.mp4` (~10s — fits full two-balloon Frieren + Fern)
+**Base video (10s, production):** `outputs/video/final/S006_kling-v26-pro_i2v_anime-audio-12fps_20260605_015128_12fps_20260605_015128.mp4` (~10s — fits full two-balloon Frieren + Fern)
 
-**Legacy 5s:** `..._20260527T073942Z_12fps_20260527T073942Z.mp4` (truncates ~11s dialogue)
+**Legacy 5s:** `..._20260527_073942_12fps_20260527_073942.mp4` (truncates ~11s dialogue)
 
 ## Iterations
 
@@ -66,10 +66,10 @@ python generate_s006_dialogue.py --skip-clone --language Japanese --mux --video 
 
 **Deliverables:**
 
-- v1 (draft): `outputs/voice/S006/s006_frieren_frieren_dialogue_v1_ja_20260603T062750Z.wav`
-- v2: `outputs/voice/final/S006/s006_frieren_frieren_dialogue_v2_ja_20260603T063526Z.wav` (~11s)
-- **v3 (10s Kling):** `outputs/voice/final/S006/s006_frieren_frieren_dialogue_v3_ja_20260605T015530Z.wav` (~9.9s)
-- **PixVerse v3:** `outputs/video/LipsyncTests/..._frieren_dialogue_v3_ja_pixverse_20260605T015836Z.mp4` · copy `outputs/video/final/Voice Added/`
+- v1 (draft): `outputs/voice/S006/s006_frieren_frieren_dialogue_v1_ja_20260603_062750.wav`
+- v2: `outputs/voice/final/S006/s006_frieren_frieren_dialogue_v2_ja_20260603_063526.wav` (~11s)
+- **v3 (10s Kling):** `outputs/voice/final/S006/s006_frieren_frieren_dialogue_v3_ja_20260605_015530.wav` (~9.9s)
+- **PixVerse v3:** `outputs/video/LipsyncTests/..._frieren_dialogue_v3_ja_pixverse_20260605_015836.mp4` · copy `outputs/video/final/Voice Added/`
 
 ```powershell
 python generate_s006_dialogue.py --skip-clone --language Japanese --compact --tag frieren_dialogue_v3_ja

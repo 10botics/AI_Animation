@@ -6,6 +6,7 @@ import subprocess
 from pathlib import Path
 
 from fal_common import ROOT
+from artifact_paths import hero_video
 
 
 def probe_duration(path: Path) -> float:
@@ -28,20 +29,30 @@ def probe_duration(path: Path) -> float:
 
 
 def latest_shot_video(shot_id: str, *, exclude_fragments: tuple[str, ...] = ()) -> Path:
-    """Latest Kling MP4 for a shot, excluding dialogue/compare variants."""
+    """Latest production MP4 for a shot (shots/ layout first, legacy outputs/video/ fallback)."""
     sid = shot_id.upper()
+    hit = hero_video(sid)
+    if hit is not None:
+        skip = set(exclude_fragments)
+        if not any(s in hit.name for s in skip):
+            return hit
+
     defaults = ("_dialogue_", "_frieren_dialogue_", "_fern_dialogue_", "compare_", "_qwen_")
     skip = set(defaults + exclude_fragments)
     candidates: list[Path] = []
     for d in (ROOT / "outputs" / "video" / "final", ROOT / "outputs" / "video"):
         if not d.is_dir():
             continue
+        for p in d.glob(f"{sid}_*.mp4"):
+            if any(s in p.name for s in skip):
+                continue
+            candidates.append(p)
         for p in d.glob(f"{sid}_kling*.mp4"):
             if any(s in p.name for s in skip):
                 continue
             candidates.append(p)
     if not candidates:
-        raise FileNotFoundError(f"No {sid} Kling MP4 (non-dialogue) under outputs/video/")
+        raise FileNotFoundError(f"No {sid} video under shots/ or outputs/video/")
     return max(candidates, key=lambda p: p.stat().st_mtime)
 
 

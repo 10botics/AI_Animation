@@ -28,11 +28,11 @@ Constants: `FERN_S004_DIALOGUE_START_SEC`, `FERN_S004_PAUSE_BEFORE_FRIEREN_SEC` 
 ```powershell
 cd scripts
 python build_s004_combined_dialogue.py `
-  --fern-wav "..\outputs\voice\final\S004\s004_fern_fern_dialogue_v2_ja_20260604T072740Z.wav" `
-  --frieren-wav "..\outputs\voice\final\S004\s004_frieren_frieren_dialogue_v2_ja_20260604T042026Z.wav" `
+  --fern-wav "..\outputs\voice\final\S004\s004_fern_fern_dialogue_v2_ja_20260604_072740.wav" `
+  --frieren-wav "..\outputs\voice\final\S004\s004_frieren_frieren_dialogue_v2_ja_20260604_042026.wav" `
   --fern-start 1.0 `
   --pause-sec 0.6 `
-  --video "..\outputs\video\S004_kling-v26-pro_i2v_anime-audio-12fps_20260604T064358Z_12fps_20260604T064358Z.mp4" `
+  --video "..\outputs\video\S004_kling-v26-pro_i2v_anime-audio-12fps_20260604_064358_12fps_20260604_064358.mp4" `
   --tag fern_v2_frieren_v2_ja
 ```
 
@@ -42,9 +42,9 @@ Use **v2 Frieren** WAV for cleaner audio unless you are A/B testing v1 hiss.
 
 ```powershell
 python mux_s004_dual_dialogue.py `
-  --video "..\outputs\video\S004_kling-v26-pro_i2v_anime-audio-12fps_20260604T064358Z_12fps_20260604T064358Z.mp4" `
-  --fern-wav "..\outputs\voice\final\S004\s004_fern_fern_dialogue_v2_ja_20260604T072740Z.wav" `
-  --frieren-wav "..\outputs\voice\final\S004\s004_frieren_frieren_dialogue_v2_ja_20260604T042026Z.wav"
+  --video "..\outputs\video\S004_kling-v26-pro_i2v_anime-audio-12fps_20260604_064358_12fps_20260604_064358.mp4" `
+  --fern-wav "..\outputs\voice\final\S004\s004_fern_fern_dialogue_v2_ja_20260604_072740.wav" `
+  --frieren-wav "..\outputs\voice\final\S004\s004_frieren_frieren_dialogue_v2_ja_20260604_042026.wav"
 ```
 
 Keeps Kling foley; ducks bed under dialogue.
@@ -53,8 +53,8 @@ Keeps Kling foley; ducks bed under dialogue.
 
 ```powershell
 python lipsync_fal.py `
-  --video "..\outputs\video\S004_kling-v26-pro_i2v_anime-audio-12fps_20260604T064358Z_12fps_20260604T064358Z.mp4" `
-  --audio "..\outputs\voice\final\S004\s004_frieren_frieren_dialogue_v2_ja_20260604T042026Z.wav" `
+  --video "..\outputs\video\S004_kling-v26-pro_i2v_anime-audio-12fps_20260604_064358_12fps_20260604_064358.mp4" `
+  --audio "..\outputs\voice\final\S004\s004_frieren_frieren_dialogue_v2_ja_20260604_042026.wav" `
   --start-sec 3.1 `
   --tag frieren_dialogue_v2_ja
 ```
@@ -83,7 +83,7 @@ python combine_dual_roi_lipsync.py --base ... --meta ..._frieren_..._roi_....jso
   --fern-wav ... --frieren-wav ... --fern-start 0.4 --pause-sec 0.6 --tag s004_fern_frieren_dual_roi
 ```
 
-**Shipped (2026-06-04):** `outputs/video/final/Voice Added/..._s004_fern_frieren_dual_roi_20260604T084028Z_dual_mux_20260604T084028Z.mp4`
+**Shipped (2026-06-04):** `outputs/video/final/Voice Added/..._s004_fern_frieren_dual_roi_20260604_084028_dual_mux_20260604_084028.mp4`
 
 ### Mask workflow (black box on other face — often easier to tune)
 

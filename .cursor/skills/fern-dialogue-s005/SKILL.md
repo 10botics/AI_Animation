@@ -57,7 +57,7 @@ python generate_s005_dialogue.py --tag fern_dialogue_vNN
 3. Mux at **1.85s** onto latest `S005_kling*.mp4`
 4. Output: `outputs/video/final/*_fern_dialogue_*_.mp4` + meta in `outputs/voice/S005/`
 
-**Base video:** `outputs/video/final/S005_kling-v26-pro_i2v_anime-audio-12fps_20260527T073521Z_12fps_20260527T073521Z.mp4`
+**Base video:** `outputs/video/final/S005_kling-v26-pro_i2v_anime-audio-12fps_20260527_073521_12fps_20260527_073521.mp4`
 
 ---
 

@@ -8,6 +8,8 @@
 # MiniMax / TTS — local voice IDs + raw reference recordings (do not commit)
 voice_registry.local.json
 voice_refs/
+video source/
+
 # Regenerate via scripts/prepare_*_qwen_ref.py (keep README only)
 Voice Reference/**
 !Voice Reference/README.md
@@ -23,7 +25,13 @@ Intern_applications/
 # =============================================================================
 outputs/
 
-# Stills, iterations, approved Final — all local-only (use --start-image / --ref for I2V)
+# Per-shot production artifacts (stills, voice, video, lip-sync, sfx)
+shots/
+
+# Chapter BGM (prototype / assembly)
+audio/
+
+# Stills, iterations — legacy layout (optional after normalize_artifacts.py)
 Tests/
 
 # Timeline / scratch exports (if present)
@@ -32,16 +40,19 @@ cuts/
 # Student workbook PDFs — rebuild from docs/cursor-student-workbook-en.md
 docs/cursor-student-workbook*.pdf
 
+# Character portrait refs — ship via mentor pack, not git
+docs/reference/
+
 # Google Drive / editor temp debris under chapter folders
 **/.tmp.driveupload/
 
 # =============================================================================
-# Media — manga sources, crops, renders (generic image→animation workflow)
+# Manga / lesson content — ship via mentor pack (build_mentor_pack_zip.py), not git
 # =============================================================================
 # Panel crops and any future ref/ folders
 panels/
 
-# Chapter workdirs — local only (page scans, stage_*.md, stage_04 QC). Recreate per chapter.
+# Chapter workdirs — page scans, stage_*.md, stage_04 QC. Recreate per chapter locally.
 Chapter-*/
 Frierien-chapter*/
 chapter-*/
@@ -62,7 +73,7 @@ sources/
 /*.png
 /*.webp
 
-# Videos / animated intermediates (if saved outside outputs/)
+# Videos / animated intermediates (if saved outside outputs/ or shots/)
 *.mp4
 *.webm
 *.mov
@@ -76,6 +87,25 @@ sources/
 *.mp3
 *.flac
 *.aac
+
+# Mentor pack ZIP — built locally; never commit (manga + voice refs)
+AI_Animation-mentor-pack.zip
+*-mentor-pack.zip
+
+# =============================================================================
+# Per-shot / scene-specific scripts — create locally via Cursor when working each shot
+# =============================================================================
+# Workbook examples (Stage 4 still, Stage 5 video, voice) stay in git:
+scripts/generate_s*.py
+!scripts/generate_s006_ref_edit.py
+!scripts/generate_s006_kling_i2v.py
+!scripts/generate_s006_fern_dialogue.py
+
+# Scene-specific one-offs (copy from examples when needed)
+scripts/compare_s008_frieren_voices.py
+scripts/build_s004_combined_dialogue.py
+scripts/mux_s004_dual_dialogue.py
+scripts/_*.py
 
 # =============================================================================
 # Python
@@ -113,3 +143,9 @@ Desktop.ini
 *.swo
 *~
 
+# =============================================================================
+# Git tracks the skeleton only: scripts/, docs/*.md, .cursor/skills/, dashboard, etc.
+# Content pack (separate ZIP): Chapter-81/, Voice Reference/, docs/reference/
+# Per-shot runners: scripts/generate_s###_*.py (except S006 examples) — local only
+# Students create during lessons: panels/, shots/, outputs/
+# =============================================================================

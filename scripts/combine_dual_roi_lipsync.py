@@ -117,7 +117,7 @@ def main() -> int:
             print(f"Missing lipsync crop: {layer['lipsync_crop']}")
             return 1
 
-    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     out_dir = args.out_dir.resolve()
     visual = out_dir / f"{base.stem}_{args.tag}_{ts}.mp4"
     print(f"Combining {len(layers)} ROI layers on {base.name}…", flush=True)

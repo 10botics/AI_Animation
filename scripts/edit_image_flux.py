@@ -7,7 +7,7 @@ Uploads your file, applies your natural-language edit prompt, downloads results 
 and writes JSON logs under outputs/fal/.
 
 Example (PowerShell):
-  python scripts/edit_image_flux.py -i Tests/S010_flux-2-pro-edit_20260325T103440Z.png `
+  python scripts/edit_image_flux.py -i Tests/S010_flux-2-pro-edit_20260325_103440.png `
     -p "Increase golden reflections on the city; keep three figures and composition unchanged."
 """
 
@@ -140,7 +140,7 @@ def main() -> int:
     image_url = fal_client.upload_file(str(inp))
     print(f"URL: {image_url}", flush=True)
 
-    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     out_dir = ROOT / "outputs" / "fal"
     tests_dir = ROOT / "Tests"
     out_dir.mkdir(parents=True, exist_ok=True)

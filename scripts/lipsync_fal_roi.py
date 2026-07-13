@@ -243,7 +243,7 @@ def main() -> int:
     vw, vh = _probe_size(video_in)
     x, y, cw, ch = _rel_to_pixels(rel, vw, vh)
     video_dur = probe_duration(video_in)
-    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     out_dir = args.out_dir.resolve()
 
     work_root = ROOT / "outputs" / "voice" / "roi_work" / (args.shot or "custom").upper()

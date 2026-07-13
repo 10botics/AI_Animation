@@ -222,7 +222,7 @@ def main() -> int:
         },
     }
 
-    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     out_audio_dir = ROOT / "outputs" / "audio" / "bgm"
     meta_dir = ROOT / "outputs" / "fal"
     out_audio_dir.mkdir(parents=True, exist_ok=True)

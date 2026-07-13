@@ -18,6 +18,8 @@
 
 **Delivery:** Dry mild realization — understated, not loud surprise (`まさか…だったとはね` pattern like S012 part 2).
 
+**Denken (next CU):** [`s016-denken-qwen-dialogue-log.md`](./s016-denken-qwen-dialogue-log.md) · `panel_s016jap` Serie/warden lines.
+
 ## Pipeline
 
 ```powershell
@@ -39,4 +41,4 @@ Voice ref: `frieren_jp_qwen_ref.wav` + `FRIEREN_JP_TONE` in prompt.
 |-----|-------|
 | `frieren_dialogue_v1_ja` | First JP run from `panel_s015jap.png` — **~2.1s** WAV |
 
-**Deliverable (v1 JA):** `outputs/voice/final/S016/s016_frieren_frieren_dialogue_v1_ja_20260605T100335Z.wav`
+**Deliverable (v1 JA):** `outputs/voice/final/S016/s016_frieren_frieren_dialogue_v1_ja_20260605_100335.wav`

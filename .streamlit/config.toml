@@ -1,0 +1,27 @@
+# Default Streamlit theme — light slate palette (matches AI Animation Studio).
+# Runtime dark mode is applied via CSS in beginner_dashboard.py when toggled.
+
+[theme]
+base = "light"
+primaryColor = "#0284c7"
+backgroundColor = "#f8fafc"
+secondaryBackgroundColor = "#ffffff"
+textColor = "#1e293b"
+borderColor = "#e2e8f0"
+codeBackgroundColor = "#f1f5f9"
+showWidgetBorder = true
+baseRadius = "0.5rem"
+buttonRadius = "0.5rem"
+
+[theme.sidebar]
+backgroundColor = "#f1f5f9"
+secondaryBackgroundColor = "#ffffff"
+textColor = "#1e293b"
+primaryColor = "#0284c7"
+borderColor = "#e2e8f0"
+
+[client]
+toolbarMode = "minimal"
+
+[server]
+headless = true

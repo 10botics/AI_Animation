@@ -232,7 +232,7 @@ def main() -> int:
 
     OUT_VIDEO_DIR.mkdir(parents=True, exist_ok=True)
     OUT_META_DIR.mkdir(parents=True, exist_ok=True)
-    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
 
     if args.shots:
         video_dir = args.video_dir.resolve()

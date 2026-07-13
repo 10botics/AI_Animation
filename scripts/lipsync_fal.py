@@ -6,7 +6,7 @@ Fal lip-sync: drive mouth motion from dialogue audio on an I2V clip.
 Inputs:
   - **video:** silent base I2V (no muxed dialogue track)
   - **audio:** clean Qwen stem, padded to match --start-sec
-  - **out-dir:** outputs/video/LipsyncTests (default)
+  - **out-dir:** shots/S###/lipsync/wip/{model}/ (default when shot ID detected)
 
 Other models (A/B fallback only):
   musetalk, sync-pro, sync-v3, sync, kling, latentsync, heygen-precision, heygen-speed
@@ -33,6 +33,7 @@ import fal_client
 
 from dialogue_mux import probe_duration
 from fal_common import ROOT, assert_model_allowed, download_file, read_fal_key
+from artifact_paths import ensure_parent, lipsync_wip_path, parse_shot_from_name
 from lipsync_meta import write_lipsync_meta
 
 MODELS = {
@@ -189,9 +190,13 @@ def _run_one(
     if not isinstance(result, dict):
         raise RuntimeError(f"Lipsync failed: {result}")
     out_url = _video_url_from_lipsync_result(result)
-    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    stem = video_in.stem
-    out_mp4 = out_dir / f"{stem}_{tag}_{model_key}_{ts}.mp4"
+    ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    shot_id = parse_shot_from_name(video_in.name)
+    if shot_id:
+        out_mp4 = lipsync_wip_path(shot_id, model_key, ts, ".mp4")
+    else:
+        out_mp4 = out_dir / f"{video_in.stem}_{tag}_{model_key}_{ts}.mp4"
+    ensure_parent(out_mp4)
     download_file(out_url, out_mp4)
     meta_path = write_lipsync_meta(
         out_mp4,
@@ -258,8 +263,8 @@ def main() -> int:
     parser.add_argument(
         "--out-dir",
         type=Path,
-        default=ROOT / "outputs" / "video" / "LipsyncTests",
-        help="Output folder for lip-sync renders (default: outputs/video/LipsyncTests)",
+        default=None,
+        help="Output folder (default: shots/S###/lipsync/wip/{model}/ when shot ID is in --video name)",
     )
     args = parser.parse_args()
 
@@ -301,7 +306,11 @@ def main() -> int:
         padded = tmp_path / "audio_padded.mp3"
         _pad_audio_for_video(dialogue, video_dur, args.start_sec, padded)
 
-        out_dir = args.out_dir.resolve()
+        out_dir = (
+            args.out_dir.resolve()
+            if args.out_dir is not None
+            else ROOT / "outputs" / "video" / "LipsyncTests"
+        )
         errors: list[str] = []
         for model_key in models_to_run:
             try:

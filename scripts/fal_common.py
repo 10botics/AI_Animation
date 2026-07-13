@@ -254,6 +254,107 @@ S012_PROMPT_FLUX = (
 )
 
 
+# S013 — **present** WS VFX: **great hemispherical barrier** over **El Dorado / Fortified City of Weise**
+# (ref: `panels/eng/panel_s013.png` from `panels/jap/panel_s013jap.png` / page `004.jpg` barrier panel).
+# Environment-only establishing plate — strip manga **speech balloon** + **chibi Frieren omake**.
+# Stage 2 also tags this beat as **S015** barrier; crop filename **s013** is the working still ID here.
+S013_PROMPT_FLUX = (
+    "Fantasy anime television establishing shot, soft cel shading, painterly epic landscape, cinematic high-angle aerial, "
+    "clear depth and atmospheric haze, finished key art — no manga halftone, panel borders, or lettering. "
+    "**Subject: environment only** — **zero people**, **no faces**, **no chibi**, **no floating character heads**, **no mascot cut-ins**. "
+    "**Camera — match `panel_s013.png`:** bird's-eye / high three-quarter view looking down on a **vast circular magical barrier dome** "
+    "enclosing rolling hills and a **central fortified castle**; same dome scale, castle placement, and corner framing as the reference. "
+    "**Barrier:** a **huge translucent hemispherical dome** of soft **pale cyan-to-silver magical energy**, thin luminous rim, "
+    "**fine sparkling motes** and gentle refractive shimmer on the shell — readable as a **ward**, not solid glass or a metal sphere. "
+    "**Interior landscape (El Dorado continuity with S010 gilt read):** hills, valleys, and forest canopy inside the dome read as "
+    "**continuous polished GOLD and champagne metal texture** — trees, ground, and distant slopes **gilded**, soft specular glints, "
+    "warm fairy-tale metallization under daylight; **not** plain grey rock, **not** ordinary green forest only. "
+    "**Central fortress:** small but sharp **medieval castle / citadel** at the dome center — stone walls, pointed towers, courtyard — "
+    "walls and roofs pick up **gold-dusted** highlights matching the gilt realm. "
+    "**Exterior:** dark cool forest and rugged terrain **outside** the circle in the frame corners — shadowed greens and deep browns, "
+    "clearly **outside** the ward so the dome edge reads. "
+    "**Sky / light:** soft daylight above the dome, cool ambient fill on the barrier shell, warm gilt bounce inside. "
+    "Mood: awe at the sealed golden homeland — pure VFX landscape plate. "
+    "Finished illustration only — no speech balloons, SFX, omake chibi, panel gutters, watermarks, or readable text."
+)
+
+
+# S014 — **present** MCU: Frieren alone after barrier reveal (`004.jpg` row 1; ref `panels/eng/panel_s014.png`).
+# stage_02: calm/surprised — barrier job / assist warden request. PREFIX_PRESENT Northern forest.
+S014_PROMPT_FLUX = (
+    "Fantasy anime television, medium close-up, soft cel shading, cool Northern forest daylight, "
+    "painterly tree depth, clear atmospheric perspective, finished key art — no manga halftone, panel borders, or lettering. "
+    "**Subject: one person only** — adult elf mage **Frieren** — **no** second figure, **no** chibi insert. "
+    "**Camera / facing — three-quarter look LEFT (must not face camera):** MCU head-and-shoulders, forest behind; "
+    "head turned **toward frame LEFT**; **gaze locked off-camera left**; **pupils and irises aim left**; "
+    "**no** direct eye contact with the lens; **no** frontal portrait stare; "
+    "three-quarter cheek and nose silhouette readable; **do not mirror** to face right. "
+    "**Expression (wary / on edge — match manga panel_s014jap):** **suspicious alert** read — "
+    "**slightly narrowed sharp teal-green eyes** glancing aside, **tense small open mouth**, "
+    "chin nestled guarded in the high scarf, brows lightly raised; "
+    "**not** soft blank neutral, **not** gentle curiosity only, **not** shocked yell, **not** smiling; "
+    "emotional restraint but clearly **uneasy / on guard**. "
+    "**Frieren locks:** petite adult elf; **silver-white low twin pigtails** with dark ribbon ties; "
+    "**long horizontal elf ears**; thick short rounded brows; large **teal-green** eyes; fair skin; "
+    "small **red teardrop earrings** on gold studs. "
+    "**Winter travel (present Northern arc):** **thick pale cream scarf** wrapped **high** under the chin; "
+    "**white or cream winter coat / capelet** with **gold trim** at collar; striped inner collar may peek; "
+    "scarf and coat read **matte soft fabric**, not plastic shine. "
+    "**Environment:** dense temperate forest behind her — vertical trunks, layered foliage, soft cool daylight through canopy; "
+    "**present** journey beat near the barrier meet, **not** golden city vista, **not** snowfield, **not** campfire. "
+    "Mood: quiet reaction looking aside after the great barrier — finished illustration only — "
+    "no speech balloons, SFX, panel gutters, watermarks, or readable text."
+)
+
+
+# S034 — **fb_macht** WS: Macht defeat memory (`007.jpg` bottom-right tier; ref `panels/eng/panel_s034.png`).
+# Macht costume/color: docs/macht-appearance-reference.md — default run also uploads macht_portrait_three-quarter.png.
+# stage_02 B7: younger Frieren kneeling before Macht — aligns **S050** antagonist styling; **not** present-path Stark (S036).
+S034_PROMPT_FLUX = (
+    "Fantasy anime television, soft cel shading, **flashback memory** palette — **cool desaturated** daylight with **vertical rain**, "
+    "softer contrast than present beat, painterly stone depth, subtle vignette. "
+    "**Subject: two figures only** — **young Frieren** kneeling or collapsed **on wet stone floor** (small frame, **white twin pigtails**, **light hooded cloak**, seen **from behind or three-quarter back only**) "
+    "**and** towering **Macht of El Dorado** standing over her. "
+    "**Match panel composition (image 1):** **wide shot** in **stone hall / arcaded courtyard** — **tall fluted columns**, **rounded arches**, **wet flagstone**; "
+    "**vertical rain** streaks; Macht **center-right standing**, young Frieren **lower-left kneeling**; **do not mirror** horizontally. "
+    "**Macht of El Dorado — anime-accurate locks (image 2 when provided):** **very tall** slender demon lord; "
+    "**long slicked-back deep burgundy / magenta hair** (**not** silver-white, **not** pale blonde, **not** black hair); "
+    "**exactly two** long **curved pale-beige ridged horns** from **temples** (**not** short stubs, **not** three horns); "
+    "**pointed ears**; **pale blue narrow eyes** with **heavy dark eyebags** (tired sleepless look); "
+    "**dark forest-green high-collared knee-length tunic** with **gold trim** at standing collar (**not** black military jacket, **not** red coat); "
+    "**golden-yellow diagonal chest sash** from **left shoulder** across chest with **white-tipped tassel fringe**; "
+    "**three stacked golden arm braces** on **right upper arm** with **long yellow tassels** hanging down; "
+    "**red maroon gloves**; **large voluminous dark navy-blue coat** draped **only on left shoulder** — asymmetric, floor-length, heavy fabric (**not** symmetric double-breasted cape, **not** fur-trimmed red mantle); "
+    "**dark polished boots**; coat **normal blue fabric** in this beat (**not** mid gold-transform sword); "
+    "**regal cold menace**, head tilted **down** at defeated Frieren. "
+    "**Young Frieren:** child elf **back to camera** — **low white pigtails**, **hooded travel cloak**, knees on stone — "
+    "**not** adult present-timeline scarf Frieren, **not** facing camera. "
+    "**Environment:** interior **palace courtyard** arcaded hall — **no** forest, **no** golden Weise vista, **no** present-party Stark or Fern. "
+    "Avoid on Macht: medals-only generic officer uniform, silver hair, missing horns, cheerful smirk. "
+    "Mood: **defeat memory** after B7 refusal. Finished illustration only — "
+    "no speech balloons, halftone, panel borders, watermark, or readable text."
+)
+
+
+# S036 — **present** MCU: **Stark** skeptical on forest path (`007.jpg` left-column lower tier; ref `panels/eng/panel_s036.png`).
+# stage_02 B7: dismissive “big deal?” reaction — **not** awe (S011), **not** Macht flashback (S034).
+S036_PROMPT_FLUX = (
+    "Fantasy anime television, soft cel shading, **cool Northern forest daylight**, cinematic depth, present-journey palette. "
+    "**Subject: only Stark** — **one** young warrior, **no** Fern, **no** Frieren, **no** second figure. "
+    "**Match `panel_s036.png`:** **medium close-up** chest-up; Stark occupies **right or center-right** of frame **per reference**; **eye-level** camera; **do not mirror** horizontally. "
+    "**Facing / chirality:** **three-quarter toward frame LEFT** — **gaze, nose, and posture** aim **left** at off-screen companions; **not** staring into the lens. "
+    "**Expression (skeptical / doubtful — match manga):** **unimpressed pushback** — **one brow raised or knit**, **orange eyes** narrowed or side-glancing, "
+    "**mouth open** mid retort (“…aren't you making a bit much of it?” / “big deal?” energy); **not** awestruck (S011), **not** furious shout, **not** soft smile. "
+    "**Stark locks:** **messy spiky red** hair with darker roots; **muscular** neck and shoulders; **red** winter coat with **cream** lapels and cuffs (**no** fluffy fur collar), "
+    "**thick high collar** with **horizontal buckle straps**; **black fingerless gloves** if hands show; **dark leather** harness strap **diagonally** across chest; "
+    "**massive double-bitted battle AXE** strap on back may peek near shoulder — **only he** has the axe. "
+    "**Environment:** **dense temperate forest** behind him — vertical trunks, layered foliage, soft cool daylight through canopy; "
+    "**present** path beat after the Weise refusal — **not** polished **gold** city vista, **not** Macht hall, **not** stone courtyard, **not** campfire close-up. "
+    "Mood: skeptical challenge on the trail. Finished illustration only — "
+    "no speech balloons, SFX, panel borders, halftone, watermark, or readable text."
+)
+
+
 # S003 variant: same camp beat, **Fern only** — reference used to strip squirrel + satchel critter for a clean plate.
 S003_PROMPT_FLUX_FERN_ONLY = (
     "Fantasy anime television, medium close profile shot, soft cel shading, cool Northern forest daylight, painterly ground detail. "

@@ -37,7 +37,7 @@ Right column top→bottom, then left bubble:
 | `v5_ja` | Missing **だ** on line 2; speech too 朗読-like |
 | **`v6_ja`** | Panel **だ** restored; 会話調 prompts |
 
-**Deliverable:** `outputs/voice/final/S012/s012_frieren_frieren_dialogue_v6_ja_20260603T072738Z.wav`
+**Deliverable:** `outputs/voice/final/S012/s012_frieren_frieren_dialogue_v6_ja_20260603_072738.wav`
 
 ## Pipeline
 

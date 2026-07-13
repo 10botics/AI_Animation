@@ -97,7 +97,7 @@ def main() -> int:
         emb_meta = entry
         reference_text = (entry.get("reference_text") or "").strip() or None
 
-    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     out_dir = ROOT / "outputs" / "voice" / "S006"
     out_dir.mkdir(parents=True, exist_ok=True)
     tag = args.tag or "fern_dialogue_ja"

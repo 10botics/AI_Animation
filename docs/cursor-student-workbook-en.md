@@ -4,10 +4,10 @@
 
 | Booklet | PDF | Read when |
 |---------|-----|-----------|
-| **0 — Cursor guide** | [cursor-student-workbook-en-cursor-guide.pdf](cursor-student-workbook-en-cursor-guide.pdf) | **First:** @ files, /skills, Agent mode, credits |
 | **1 — Setup** | [cursor-student-workbook-en-setup.pdf](cursor-student-workbook-en-setup.pdf) | **Day 1:** what project does, install, folders, manga RTL |
-| **2 — First try (S006)** | [cursor-student-workbook-en-s006-first-try.pdf](cursor-student-workbook-en-s006-first-try.pdf) | **Day 2:** 12 steps — @ files not copy-paste paths |
-| **3 — Skills reference** | [cursor-student-workbook-en.pdf](cursor-student-workbook-en.pdf) | **Full skills workflow** + troubleshooting |
+| **2 — Cursor guide** | [cursor-student-workbook-en-cursor-guide.pdf](cursor-student-workbook-en-cursor-guide.pdf) | **Day 1:** drag files into chat, /skills, Agent mode, credits |
+| **3 — First try (S006)** | [cursor-student-workbook-en-s006-first-try.pdf](cursor-student-workbook-en-s006-first-try.pdf) | **Day 2:** 8 steps — voice, Nano Banana still, video extend, Frieren lip-sync only |
+| **4 — Skills reference** | [cursor-student-workbook-en.pdf](cursor-student-workbook-en.pdf) | **After S006:** full skills workflow + troubleshooting |
 
 Regenerate all PDFs: `python scripts/build_student_workbook_pdf.py`
 
@@ -32,7 +32,7 @@ Regenerate all PDFs: `python scripts/build_student_workbook_pdf.py`
 | **§7–12** | Prompt templates | Copy-paste after you know §6 |
 | **§13–16** | Help & cheat sheet | Problems, reading list, one-liner prompt |
 
-**Start here:** Print **Cursor guide PDF** → **Setup PDF** → **S006 PDF**. Use **@ in Cursor chat** to pick files (do not copy paths). Type **`/skill-name` first** on every production step. **Voice:** generate **Fern and Frieren** WAV on S006. **Video:** **Seedance first**, Kling only if needed. Each step labels **FREE vs USES FAL CREDITS**.
+**Start here:** Print **Setup PDF** → **Cursor guide PDF** → **S006 PDF**. **Drag files** from the left sidebar into Agent chat (do not copy paths or hunt for exact file names). Type **`/skill-name` first** on every production step. **Voice:** generate **Fern and Frieren** clips on S006 using mentor **Voice Reference**. **Video:** extend the clip if speech is longer. Each step labels **FREE vs USES FAL CREDITS**.
 
 ---
 
@@ -74,10 +74,10 @@ Follow these steps **in order**. Use **File Explorer** and **your web browser** 
 3. Choose **Download ZIP** (not “Clone” — that needs Git).
 4. Wait for the download to finish (file name like `AI_Animation-main.zip`).
 5. Open your **Downloads** folder in File Explorer.
-6. **Right-click** the ZIP → **Extract All…** → choose a simple path, e.g. `C:\Work\AI_Animation`.
-7. After extract, you should see a folder named `AI_Animation` (or `AI_Animation-main` — **rename** it to `AI_Animation` if needed).
+6. **Right-click** the ZIP → **Extract All…** → destination: **`C:\`** only (the **C: drive root** — do not pick a long path that may not exist yet).
+7. Windows creates `C:\AI_Animation-main` — **rename** that folder to **`AI_Animation`**.
 
-**Check:** Inside the folder you should see `Chapter-81`, `docs`, `scripts`, `.cursor`, and `README.md`.
+**Check:** Open `C:\AI_Animation` — you should see `docs`, `scripts`, `.cursor`, and `README.md`. **`Chapter-81` is not in the ZIP** — copy it from your mentor in §2.2.
 
 ### 2.2 Copy files your mentor provides
 
@@ -95,7 +95,7 @@ Git does **not** include manga scans or generated images. Ask your mentor for a 
 
 1. Launch **Cursor** from the Start menu.
 2. Menu **File → Open Folder…**
-3. Browse to `C:\Work\AI_Animation` (or where you extracted).
+3. Browse to **`C:\AI_Animation`**.
 4. Click **Select Folder**.
 5. In the **left sidebar**, expand folders — confirm you see `docs/cursor-student-workbook-en.md`.
 
@@ -142,16 +142,16 @@ Do not change any shot files or run Fal API yet.
 
 ---
 
-## 3. What is in the project folder? (simple guide)
+## 3. What goes where (three groups)
 
-Think of the project as **two piles of files**:
+The GitHub ZIP does **not** include manga scans, chapter notes, or generated media. Use **three groups**:
 
-| Comes in the ZIP download | You or mentor add later |
-|---------------------------|-------------------------|
-| Story notes (`Chapter-81/`) | Manga page photos (`002.jpg` …) |
-| Helper programs (`scripts/`) | Cropped panels (`panels/`) |
-| How-to docs (`docs/`) | Your pictures and videos (`Tests/`, `outputs/`) |
-| Agent recipes (`.cursor/skills/`) | Your secret API key (`.env`) |
+| Group A — GitHub ZIP | Group B — mentor copies (USB / shared drive) | Group C — you create on this PC |
+|----------------------|-----------------------------------------------|----------------------------------|
+| `scripts/` — programs Agent runs | `Chapter-81/` — JPGs + `stage_01`–`stage_03` | `.env` — your `FAL_KEY` |
+| `docs/` — workbooks and guides | `panels/eng/` and `panels/jap/` (optional) | `.venv/` — Python env (setup §2.5) |
+| `.cursor/skills/` — Agent checklists | `Voice Reference/` — Qwen voice refs (optional) | `Tests/` — anime stills |
+| `.env.example`, `requirements.txt` | | `outputs/` — voice, video, lip-sync |
 
 **You do not need to open `scripts/` yourself.** Cursor Agent runs them when you use prompts + skills.
 
@@ -214,17 +214,18 @@ flowchart TB
   L --> S6
 ```
 
-| Stage | You do (often via Cursor Agent) | Output |
-|-------|----------------------------------|--------|
-| **1–3 Story** | Ingest, shot list, bible for **S###** | `stage_01`–`stage_03` |
-| **Analyze** | Read JP balloons, speakers, line order | Timing notes in chat or shot doc |
-| **5b Voice** | **Qwen TTS first** — one WAV per speaker line | `outputs/voice/final/S###/*.wav` |
-| **Timing** | Sum speech + pauses; map to Seedance sec or Kling 5/10s | `--duration`, `--start-sec`, in-between A/B |
+| Step | You do (often via Cursor Agent) | Output |
+|------|----------------------------------|--------|
+| **1 Study** | Read JP balloons, speakers, line order (`stage_02` / `stage_03`) | Shot plan in chat |
+| **2 Voice** | **Qwen TTS first** — one WAV per speaker line | `outputs/voice/final/S###/*.wav` |
+| **3 Timing** | Sum speech + pauses; map to Seedance sec or Kling 5/10s | `--duration`, `--start-sec`, in-between A/B |
 | **4 Still** | Panel or multi-ref → Nano Banana | `Tests/Final/S###_*.png` |
-| **5 Motion** | **Seedance first** → Kling if needed; duration fits dialogue | `outputs/video/S###_*.mp4` |
-| **5c Lip-sync** | Mask → PixVerse → combine if 2 speakers | `outputs/video/LipsyncTests/*.mp4` |
-| **6 Assemble** | Concat shots for a **scene** (any length) | Scene `.mp4` |
-| **7 Fix** | One issue per pass | `stage_04_s###_visual_qc_log.md` |
+| **5 Video** | **Seedance first** → Kling if needed; duration fits dialogue | `outputs/video/S###_*.mp4` |
+| **6 Lip-sync** | Mask → PixVerse → combine if 2 speakers | `outputs/video/LipsyncTests/*.mp4` |
+| **7 Assemble** | Concat shots for a **scene** (any length) | Scene `.mp4` |
+| **Fix (any step)** | One issue per pass | `stage_04_s###_visual_qc_log.md` |
+
+*Legacy docs may say “Stage 4 still” or “Stage 5 motion” — those map to **Steps 4–5** above.*
 
 **Golden rules:** (1) **Voice before video length.** (2) Fix **panel crops** and **stage_02** before prompt tweaks. (3) Ask **Cursor** to read files — do not guess dialogue from EN scans alone.
 
@@ -929,17 +930,17 @@ Use an in-between when the manga shot is **hard to lip-sync** (back to camera, w
 ### 10.4 Production checklist (per shot)
 
 ```markdown
-- [ ] stage_02 row read — correct Layer (present vs flashback)
+- [ ] Step 1: stage_02 row read — correct Layer (present vs flashback)
 - [ ] panels/eng/panel_s###.png cropped
-- [ ] Stage 4 still in Tests/Final
-- [ ] Stage 5 video: **Seedance tried first** (or Kling if routed); duration fits WAV
-- [ ] In-between if needed: **A** new Nano still **or** **B** extend last frame (+5s/10s)
-- [ ] Stage 5b: Qwen WAV per speaker (`outputs/voice/final/S###/`)
-- [ ] Stage 5c: face mask(s) + PixVerse lip-sync per speaker
-- [ ] File named with shot ID for assembly
+- [ ] Step 2: Qwen WAV per speaker (`outputs/voice/final/S###/`)
+- [ ] Step 3: duration fits WAV (+ pauses); in-between **A** new still **or** **B** extend last frame
+- [ ] Step 4: still in Tests/Final
+- [ ] Step 5: video — **Seedance tried first** (or Kling if routed)
+- [ ] Step 6: face mask(s) + PixVerse lip-sync per speaker
+- [ ] File named with shot ID for Step 7 assembly
 ```
 
-### 10.6 Assemble scene (Stage 6)
+### 10.6 Assemble scene (Step 7)
 
 ```text
 Assemble page 002 camp scene in story order S002→S006B.
@@ -951,7 +952,7 @@ Report total duration. Scene length = sum of dialogue-backed shots.
 
 ---
 
-## 11. Voice and lip-sync (required — Stage 5b + 5c)
+## 11. Voice and lip-sync (required — Steps 2 + 6)
 
 Every shot with **dialogue in `stage_03`** must ship with **Qwen voice** and **PixVerse lip-sync**. **Generate voice before you lock video duration or model.**
 

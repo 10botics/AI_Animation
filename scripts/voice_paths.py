@@ -9,6 +9,7 @@ VOICE_REFERENCE = ROOT / "Voice Reference"
 VR_JP_FRIEREN = VOICE_REFERENCE / "Japanese" / "Frieren"
 VR_JP_FERN = VOICE_REFERENCE / "Japanese" / "Fern"
 VR_JP_STARK = VOICE_REFERENCE / "Japanese" / "Stark"
+VR_JP_DENKEN = VOICE_REFERENCE / "Japanese" / "Denken"
 VR_EN_FRIEREN = VOICE_REFERENCE / "English" / "Frieren"
 
 # Demucs / VAD / full extracts (not production refs)

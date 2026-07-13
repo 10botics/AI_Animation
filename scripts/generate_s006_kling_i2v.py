@@ -2,7 +2,7 @@
 S006 — Kling 2.6 Pro **image-to-video** from an approved Stage 4 still.
 
 **MS** B2 camp debate — Frieren at tree, Fern by fire; **panel-locked** framing.
-Default: **`Tests/Final/S006_nano-banana-2-edit_20260330T035743Z.png`**, **`duration` \"5\"**.
+Default: **`Tests/Final/S006_nano-banana-2-edit_20260330_035743.png`**, **`duration` \"5\"**.
 **`--anime-limited`** (default), **`--audio`** for native foley.
 
 Requires: `FAL_KEY` in project `.env`, package `fal-client`.
@@ -30,10 +30,11 @@ from fal_common import (
     video_url_from_result,
 )
 
+from artifact_paths import ensure_parent, resolve_still, video_wip_path
 SHOT_ID = "S006"
 MODEL_ID = "fal-ai/kling-video/v2.6/pro/image-to-video"
 
-DEFAULT_START = ROOT / "Tests" / "Final" / "S006_nano-banana-2-edit_20260330T035743Z.png"
+DEFAULT_START = resolve_still('S006', ROOT / "Tests" / "Final" / "S006_nano-banana-2-edit_20260330_035743.png")
 
 NEGATIVE_BASE = (
     "blur, distort, low quality, manga panel, speech bubble, halftone, "
@@ -119,11 +120,9 @@ def main() -> int:
         print(f"Start image not found: {start_path}", file=sys.stderr)
         return 1
 
-    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     out_dir = ROOT / "outputs" / "fal"
-    video_dir = ROOT / "outputs" / "video"
     out_dir.mkdir(parents=True, exist_ok=True)
-    video_dir.mkdir(parents=True, exist_ok=True)
 
     os.environ["FAL_KEY"] = key
 
@@ -198,7 +197,8 @@ def main() -> int:
     if args.anime_fps > 0:
         parts.append(f"{args.anime_fps}fps")
     tag = "-".join(parts)
-    dest = video_dir / f"{SHOT_ID}_kling-v26-pro_i2v_{tag}_{ts}{ext}"
+    dest = video_wip_path(SHOT_ID, "kling-v26-pro", ts, ext, tag=tag)
+    ensure_parent(dest)
     print(f"Downloading: {vurl}", flush=True)
     download_file(vurl, dest)
     print(f"Saved: {dest}", flush=True)

@@ -22,7 +22,14 @@ from pathlib import Path
 import fal_client
 
 from fal_common import ROOT, download_file, read_fal_key
-from voice_paths import VR_EN_FRIEREN, VR_JP_FERN, VR_JP_FRIEREN, VR_JP_STARK, VOICE_REFS_WORK
+from voice_paths import (
+    VR_EN_FRIEREN,
+    VR_JP_DENKEN,
+    VR_JP_FERN,
+    VR_JP_FRIEREN,
+    VR_JP_STARK,
+    VOICE_REFS_WORK,
+)
 
 REGISTRY_PATH = ROOT / "voice_registry.local.json"
 QWEN_CLONE = "fal-ai/qwen-3-tts/clone-voice/1.7b"
@@ -164,6 +171,166 @@ FRIEREN_S016_PROMPT_EN = (
     "To think it was Denken. Soft unhurried English dub, understated, matter-of-fact."
 )
 FRIEREN_S016_DIALOGUE_START_SEC = 1.0
+
+# Denken — personality: docs/denken-qwen-personality-guide.md
+# JP VA: 斉藤次郎 (baritone elder); EN: Ben Phillips
+DENKEN_QWEN_REF_WAV = VR_JP_DENKEN / "denken_jp_qwen_ref.wav"
+DENKEN_QWEN_REF_TXT = VR_JP_DENKEN / "denken_jp_qwen_ref.txt"
+DENKEN_QWEN_REF_META = VR_JP_DENKEN / "denken_jp_qwen_ref.json"
+DENKEN_SOURCE_MP4 = VOICE_REFS_WORK / "denkensource.mp4"
+
+DENKEN_JP_TONE = (
+    "高齢の男性魔法使い。落ち着いた低めのバリトン。威厳と温かみがある。"
+    "叫ばない。おじいちゃん芝居・甲高い声・若者声・悪役の掠れ声にしない。"
+)
+
+# S016 Denken — B4 after meet; story balloons on panel crop s016 (not Frieren's S016 meet balloon)
+# Shot-list S016 meet WS = Frieren only (`panel_s015jap`). Denken CU: [`panels/jap/panel_s016jap.png`]
+DENKEN_S016_PHRASES = (
+    "ゼーリエに頼み込んでな。",
+    "最近結界の管理者の任を継いだんだ。",
+)
+DENKEN_S016_PHRASES_EN = (
+    "I pleaded with Serie, you see.",
+    "I recently took over as the barrier's warden.",
+)
+DENKEN_S016_LANGUAGE = "Japanese"
+DENKEN_S016_DIALOGUE = {
+    "Frieren": {
+        "ja": "まさかデンケンだったとはね。",
+        "panel": "panels/jap/panel_s015jap.png",
+        "note": "Shot-list S016 meet — Frieren only.",
+    },
+    "Denken": {
+        "ja": "".join(DENKEN_S016_PHRASES),
+        "ja_phrases": DENKEN_S016_PHRASES,
+        "en_phrases": DENKEN_S016_PHRASES_EN,
+        "en": " ".join(DENKEN_S016_PHRASES_EN),
+        "panel": "panels/jap/panel_s016jap.png",
+    },
+}
+DENKEN_S016_PROMPT_PART1 = (
+    "森の中、フリーレンに認識された直後のデンケン。"
+    "ゼーリエに頼み込んでな、と落ち着いて認める。低めのバリトン。柔らかく余韻のあるな。"
+    + DENKEN_JP_TONE
+)
+DENKEN_S016_PROMPT_PART2 = (
+    "続けて、最近結界の管理者の任を継いだんだ、と事実を淡々と述べる。"
+    "宮廷魔法使いの落ち着き。断定のだは強く張り上げない。温かみを残す。"
+    + DENKEN_JP_TONE
+)
+DENKEN_S016_PROMPTS = (DENKEN_S016_PROMPT_PART1, DENKEN_S016_PROMPT_PART2)
+DENKEN_S016_PROMPT = DENKEN_S016_PROMPT_PART1 + " " + DENKEN_S016_PROMPT_PART2
+DENKEN_S016_PROMPT_EN = (
+    "Forest meet. Elderly mage Denken calmly admits he pleaded with Serie and recently "
+    "became the barrier warden—warm baritone, composed, never shouty or frail."
+)
+DENKEN_S016_DIALOGUE_START_SEC = 1.0
+DENKEN_S016_PAUSE_SEC = 0.55
+
+# S017 — hometown reveal (`panels/jap/panel_s017jap.png`)
+DENKEN_S017_PHRASES = (
+    "この地には…",
+    "黄金郷には儂の故郷があるからな。",
+)
+DENKEN_S017_PHRASES_EN = (
+    "In this land…",
+    "In the Golden Land, my hometown is there.",
+)
+DENKEN_S017_LANGUAGE = "Japanese"
+DENKEN_S017_PROMPT_PART1 = (
+    "森の崖際。この地には、と少し間を置いて切り出す。低めのバリトン。感慨はあるが泣き声にしない。"
+    + DENKEN_JP_TONE
+)
+DENKEN_S017_PROMPT_PART2 = (
+    "黄金郷には儂の故郷があるからな、と静かに明かす。儂は自然な老人の一人称。"
+    "郷愁はあるが淡々と。叫ばない。"
+    + DENKEN_JP_TONE
+)
+DENKEN_S017_PROMPTS = (DENKEN_S017_PROMPT_PART1, DENKEN_S017_PROMPT_PART2)
+DENKEN_S017_PROMPT = DENKEN_S017_PROMPT_PART1 + " " + DENKEN_S017_PROMPT_PART2
+DENKEN_S017_DIALOGUE_START_SEC = 1.0
+DENKEN_S017_PAUSE_SEC = 0.55
+
+# S013 — ch.81 B4 / `004.jpg` row 1 — great barrier megashot (stage_03 **S015-barrier**)
+# Story ref (JP): [`panels/jap/panel_s013jap.png`] — chibi omake + balloon; still ID **S013**.
+# One manga sentence — do not split across TTS phrases (formula §1).
+FRIEREN_S013_PHRASES_EN = (
+    "Is Macht still sealed inside the great barrier covering the Golden Land?",
+)
+FRIEREN_S013_PHRASES = ("黄金郷を覆う大結界の中には今もマハトが封印されているのか。",)
+FRIEREN_S013_LANGUAGE = "Japanese"
+FRIEREN_S013_DIALOGUE = {
+    "Frieren": {
+        "ja": FRIEREN_S013_PHRASES[0],
+        "ja_phrases": FRIEREN_S013_PHRASES,
+        "en_phrases": FRIEREN_S013_PHRASES_EN,
+        "en": FRIEREN_S013_PHRASES_EN[0],
+    },
+}
+FRIEREN_S013_PROMPT = (
+    "黄金郷を覆う巨大な大結界を見下ろす展望。今もマハトが封印されているのか、と静かに問う。"
+    "歴史を思い出すような淡々とした口調。分析的。興奮しない。"
+    "テンポやや早め、間を詰め、簡潔に一続きで言い切る。語尾「のか」は短く。"
+    + FRIEREN_JP_TONE
+)
+FRIEREN_S013_PROMPT_EN = (
+    "Extreme wide barrier overlook. Frieren wonders whether Macht is still sealed "
+    "inside the great ward over the Golden Land—calm historian tone, soft unhurried English dub, "
+    "slightly brisker pace, concise, no long pauses, never melodramatic."
+)
+FRIEREN_S013_DIALOGUE_START_SEC = 0.35
+FRIEREN_S013_TARGET_MAX_SEC = 4.9
+
+# S014 — ch.81 B4 / `004.jpg` row 1 left — MCU Frieren after barrier reveal
+# Story ref (JP): [`panels/jap/panel_s014jap.png`]
+# stage_02: calm/surprised — barrier job; request to assist warden (not loud shock).
+FRIEREN_S014_PHRASES_EN = (
+    "Still, I'm surprised.",
+    "The request said to help the barrier warden dispatched by the Continental Magic Association, though.",
+)
+FRIEREN_S014_PHRASES = (
+    "しかし驚いたよ。",
+    "依頼書には大陸魔法協会から派遣された結界の管理者を手伝うようにとあったけど。",
+)
+FRIEREN_S014_LANGUAGE = "Japanese"
+FRIEREN_S014_DIALOGUE = {
+    "Frieren": {
+        "ja": "".join(FRIEREN_S014_PHRASES),
+        "ja_phrases": FRIEREN_S014_PHRASES,
+        "en_phrases": FRIEREN_S014_PHRASES_EN,
+        "en": " ".join(FRIEREN_S014_PHRASES_EN),
+    },
+}
+FRIEREN_S014_PROMPT = (
+    "森の中、大結界を見た直後のフリーレン。しかし驚いたよ、と淡い驚きだけ。"
+    "依頼書では大陸魔法協会から派遣された結界の管理者を手伝うとあった、と続ける。"
+    "フラットで落ち着いた話し言葉。大げさな驚き・興奮・甲高い声にしない。"
+    + FRIEREN_JP_TONE
+)
+FRIEREN_S014_PROMPT_PART1 = (
+    "森の中。しかし驚いたよ、と短く。軽い驚きだけ、フラットで落ち着いた日本語。"
+    "大げさにしない。語尾よは自然に。"
+    + FRIEREN_JP_TONE
+)
+FRIEREN_S014_PROMPT_PART2 = (
+    "依頼書には大陸魔法協会から派遣された結界の管理者を手伝うようにとあったけど、と一続きで。"
+    "説明口調、淡々と。けどで柔らかく余韻。朗読調にしない。"
+    + FRIEREN_JP_TONE
+)
+FRIEREN_S014_PROMPTS = (FRIEREN_S014_PROMPT_PART1, FRIEREN_S014_PROMPT_PART2)
+FRIEREN_S014_PROMPT_EN = (
+    "Forest MCU after the great barrier. Frieren notes mild surprise—calm, dry, understated—"
+    "then explains the request was to assist the barrier warden from the Continental Magic Association. "
+    "Soft unhurried English dub; trailing though; never excited or bubbly."
+)
+FRIEREN_S014_PROMPTS_EN = (
+    "Forest MCU. Soft dry: Still, I'm surprised. Mild only—flat calm English dub.",
+    "Continuing: the request said to help the barrier warden from the Continental Magic Association, though. "
+    "Matter-of-fact, soft trailing though, never loud.",
+)
+FRIEREN_S014_PAUSE_SEC = 0.5
+FRIEREN_S014_DIALOGUE_START_SEC = 1.0
 
 # Fern S004 — same panel; speaks first (honorific before Frieren’s question)
 FERN_S004_PHRASES = ("フリーレン様。",)
@@ -575,6 +742,24 @@ def load_stark_reference_text(ref_txt: Path | None = None) -> str:
     return text
 
 
+def load_denken_reference_text(ref_txt: Path | None = None) -> str:
+    path = ref_txt or DENKEN_QWEN_REF_TXT
+    if not path.is_file():
+        raise FileNotFoundError(
+            f"Missing reference transcript: {path}\n"
+            "Run: python isolate_vocals_fal.py ..\\voice_refs\\denkensource.mp4 "
+            "--out ..\\voice_refs\\denken_vocals.wav\n"
+            "Then: python prepare_frieren_qwen_ref.py --source ..\\voice_refs\\denken_vocals.wav "
+            "--skip-demucs --out-wav \"..\\Voice Reference\\Japanese\\Denken\\denken_jp_qwen_ref.wav\" "
+            "--out-txt \"..\\Voice Reference\\Japanese\\Denken\\denken_jp_qwen_ref.txt\" "
+            "--out-meta \"..\\Voice Reference\\Japanese\\Denken\\denken_jp_qwen_ref.json\""
+        )
+    text = path.read_text(encoding="utf-8-sig").strip()
+    if not text:
+        raise ValueError(f"Empty reference transcript: {path}")
+    return text
+
+
 def extract_eng_dub_ref(
     dest: Path,
     *,
@@ -973,6 +1158,50 @@ def synthesize_s016_frieren(
     return export_dialogue_wav(out_mp3, wav_out)
 
 
+def synthesize_s013_frieren(
+    embedding_url: str,
+    out_mp3: Path,
+    wav_out: Path,
+    *,
+    prompt: str = FRIEREN_S013_PROMPT,
+    phrase: str = FRIEREN_S013_PHRASES[0],
+    language: str = FRIEREN_S013_LANGUAGE,
+) -> Path:
+    """S013 single balloon — great barrier / Macht sealed?; clone-only reference_text; clean PCM WAV."""
+    synthesize(
+        phrase,
+        embedding_url,
+        out_mp3,
+        prompt=prompt,
+        reference_text=None,
+        language=language,
+        use_reference_text_on_tts=False,
+    )
+    return export_dialogue_wav(out_mp3, wav_out)
+
+
+def synthesize_s014_frieren(
+    embedding_url: str,
+    out: Path,
+    *,
+    reference_text: str | None = None,
+    pause_sec: float = FRIEREN_S014_PAUSE_SEC,
+    prompts: tuple[str, ...] = FRIEREN_S014_PROMPTS,
+    phrases: tuple[str, ...] = FRIEREN_S014_PHRASES,
+    language: str = FRIEREN_S014_LANGUAGE,
+) -> Path:
+    """S014 two-beat MCU — mild surprise + request/warden explanation."""
+    return synthesize_frieren_phrases(
+        embedding_url,
+        out,
+        phrases=phrases,
+        prompts=prompts,
+        reference_text=reference_text,
+        pause_sec=pause_sec,
+        language=language,
+    )
+
+
 def synthesize_s008_frieren(
     embedding_url: str,
     out: Path,
@@ -1062,6 +1291,28 @@ def synthesize_s012_stark(
     )
 
 
+def synthesize_s016_denken(
+    embedding_url: str,
+    out: Path,
+    *,
+    reference_text: str | None = None,
+    pause_sec: float = DENKEN_S016_PAUSE_SEC,
+    prompts: tuple[str, ...] = DENKEN_S016_PROMPTS,
+    phrases: tuple[str, ...] = DENKEN_S016_PHRASES,
+    language: str = DENKEN_S016_LANGUAGE,
+) -> Path:
+    """S016 Denken CU — panel_s016jap: Serie plea + barrier warden."""
+    return synthesize_frieren_phrases(
+        embedding_url,
+        out,
+        phrases=phrases,
+        prompts=prompts,
+        reference_text=reference_text,
+        pause_sec=pause_sec,
+        language=language,
+    )
+
+
 def synthesize_s006_frieren(
     embedding_url: str,
     out: Path,
@@ -1101,6 +1352,9 @@ def _ref_duration(ref_wav: Path) -> float:
         return float(meta.get("duration_sec", 12.0))
     if STARK_QWEN_REF_META.is_file() and ref_wav == STARK_QWEN_REF_WAV:
         meta = json.loads(STARK_QWEN_REF_META.read_text(encoding="utf-8"))
+        return float(meta.get("duration_sec", 12.0))
+    if DENKEN_QWEN_REF_META.is_file() and ref_wav == DENKEN_QWEN_REF_WAV:
+        meta = json.loads(DENKEN_QWEN_REF_META.read_text(encoding="utf-8"))
         return float(meta.get("duration_sec", 12.0))
     if FERN_QWEN_REF_META.is_file() and ref_wav == FERN_QWEN_REF_WAV:
         meta = json.loads(FERN_QWEN_REF_META.read_text(encoding="utf-8"))
@@ -1152,6 +1406,19 @@ def resolve_stark_embedding(force_reclone: bool = False) -> tuple[str, dict]:
     )
 
 
+def resolve_denken_embedding(force_reclone: bool = False) -> tuple[str, dict]:
+    ref_text = load_denken_reference_text()
+    return resolve_character_embedding(
+        "Denken",
+        ref_wav=DENKEN_QWEN_REF_WAV,
+        ref_seconds=_ref_duration(DENKEN_QWEN_REF_WAV),
+        ref_skip=0.0,
+        force_reclone=force_reclone,
+        reference_text=ref_text,
+        prompt_note=DENKEN_S016_PROMPT,
+    )
+
+
 def resolve_character_embedding(
     character: str,
     *,
@@ -1194,7 +1461,7 @@ def resolve_character_embedding(
         "reference_text": ref_text_key,
         "prompt_default": prompt_note,
         "demucs": ref_wav == FRIEREN_QWEN_REF_WAV,
-        "cloned_at": datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ"),
+        "cloned_at": datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S"),
     }
     qwen[character] = meta
     reg.setdefault("voice_ref_notes", {})[character] = ref_key
@@ -1221,7 +1488,7 @@ def main() -> int:
     if args.out:
         out = args.out.resolve()
     else:
-        ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         out = ROOT / "outputs" / "voice" / f"{args.character.lower()}_{ts}.mp3"
 
     path = synthesize(args.text, emb, out, prompt=args.prompt, reference_text=ref_text)

@@ -51,7 +51,7 @@
 | `v3_ja` | `えっ…` + `すごい…` | Too **confused** — retired |
 | **`v4_ja`** | `すごい…` + `全部、金色なんだ…` | **Impressed** teen; no えっ |
 
-**Deliverable:** `outputs/voice/S012/s012_stark_stark_dialogue_v4_ja_20260603T101933Z.wav`
+**Deliverable:** `outputs/voice/S012/s012_stark_stark_dialogue_v4_ja_20260603_101933.wav`
 
 ## Pipeline
 
@@ -70,3 +70,19 @@ python generate_s012_stark_dialogue.py --reclone --language Japanese --tag stark
 | Ref | `stark_jp_qwen_ref.wav` |
 
 **Mux:** Optional `--mux`; layer under Frieren stem with offset ~2.5s+ (QC lip on WS backs).
+
+## Lip-sync (PixVerse)
+
+Phrase-only test (`p1` from `101247Z`, not full v4 WAV):
+
+```powershell
+ffmpeg -y -i ..\outputs\video\final\S012_seedance-2-i2v-audio_20260527_091633.mp4 -c:v copy -an ..\outputs\video\S012_seedance_091633_silent_for_lipsync.mp4
+python lipsync_fal.py `
+  --video ..\outputs\video\S012_seedance_091633_silent_for_lipsync.mp4 `
+  --audio ..\outputs\voice\S012\s012_stark_20260603_101247_p1.mp3 `
+  --start-sec 2.5 --tag stark_101247_p1
+```
+
+**Deliverable:** `outputs/video/LipsyncTests/S012_seedance_091633_silent_for_lipsync_stark_101247_p1_pixverse_20260710_103250.mp4`
+
+Note: ~5.1s base + 3.0s `p1` @ 2.5s → tail of speech is truncated by `apad=whole_dur`.

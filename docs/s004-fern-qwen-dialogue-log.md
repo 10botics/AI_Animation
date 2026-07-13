@@ -49,7 +49,7 @@ python generate_s004_fern_dialogue.py --reclone --tag fern_dialogue_v1_ja
 | `fern_dialogue_v2_ja` | **Use** — ref window @ **40.75s** (12s speech); transcript in `fern_jp_qwen_ref.txt` |
 | `fern_dialogue_v1_ja` | Retired — VAD picked **8.5s** gasp (`えっ?` only) |
 
-**Deliverable (v2):** `outputs/voice/final/S004/s004_fern_fern_dialogue_v2_ja_20260604T072740Z.wav`
+**Deliverable (v2):** `outputs/voice/final/S004/s004_fern_fern_dialogue_v2_ja_20260604_072740.wav`
 
 **Ref prep:** Demucs → `voice_refs/fern_jp_vocals.wav`; `prepare_fern_qwen_ref.py --skip 20` (default).
 

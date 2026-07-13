@@ -91,7 +91,7 @@ Separate shot — Stark silent on `panel_s012jap`; optional stem via `generate_s
 
 ## 8. Lip-sync (PixVerse)
 
-After **S011** v4 WAV is approved: [`pixverse-lipsync`](../pixverse-lipsync/SKILL.md) — `lipsync_fal.py`, `--start-sec 0.85`, base `S011_seedance-2-i2v-audio_20260527T090828Z.mp4`.
+After **S011** v4 WAV is approved: [`pixverse-lipsync`](../pixverse-lipsync/SKILL.md) — `lipsync_fal.py`, `--start-sec 0.85`, base `S011_seedance-2-i2v-audio_20260527_090828.mp4`.
 
 ## 9. Related
 

@@ -22,6 +22,7 @@ from pathlib import Path
 import fal_client
 
 from panel_paths import PANELS_ENG
+from artifact_paths import ensure_parent, still_wip_path
 from fal_common import (
     ROOT,
     S006_PROMPT_FLUX,
@@ -171,9 +172,8 @@ def main() -> int:
     image_url = fal_client.upload_file(str(ref_path))
     print(f"Reference URL: {image_url}", flush=True)
 
-    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     out_dir = ROOT / "outputs" / "fal"
-    tests_dir = ROOT / "Tests"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     meta_path = out_dir / f"{SHOT_ID}_ref_edit_meta_{ts}.json"
@@ -221,7 +221,8 @@ def main() -> int:
             continue
 
         ext = extension_from_url(url)
-        image_path = tests_dir / f"{SHOT_ID}_{slug}_{ts}{ext}"
+        image_path = still_wip_path(SHOT_ID, slug, ts, ext)
+        ensure_parent(image_path)
         try:
             download_file(url, image_path)
             print(f"Saved: {image_path}", flush=True)

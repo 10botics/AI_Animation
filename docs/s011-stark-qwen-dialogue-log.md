@@ -39,28 +39,28 @@ cd scripts
 python generate_s011_stark_dialogue.py --skip-clone --language Japanese --tag stark_dialogue_v4_ja
 ```
 
-**Deliverable:** `outputs/voice/S011/s011_stark_stark_dialogue_v4_ja_20260603T102959Z.wav`
+**Deliverable:** `outputs/voice/S011/s011_stark_stark_dialogue_v4_ja_20260603_102959.wav`
 
 ## Lip-sync (PixVerse — production)
 
 **Model:** `pixverse` (default in `lipsync_fal.py`) · **Log:** [`docs/pixverse-lipsync-log.md`](pixverse-lipsync-log.md)
 
-Base: `outputs/video/final/S011_seedance-2-i2v-audio_20260527T090828Z.mp4` · Audio: v4 Stark WAV · `--start-sec 0.85` · **out:** `outputs/video/LipsyncTests/`
+Base: `outputs/video/final/S011_seedance-2-i2v-audio_20260527_090828.mp4` · Audio: v4 Stark WAV · `--start-sec 0.85` · **out:** `outputs/video/LipsyncTests/`
 
 *Note: base clip ~5.08s; dialogue ~5.0s @ 0.85s — tail may trim to video length.*
 
 ```powershell
 cd scripts
 python lipsync_fal.py `
-  --video "..\outputs\video\final\S011_seedance-2-i2v-audio_20260527T090828Z.mp4" `
-  --audio "..\outputs\voice\S011\s011_stark_stark_dialogue_v4_ja_20260603T102959Z.wav" `
+  --video "..\outputs\video\final\S011_seedance-2-i2v-audio_20260527_090828.mp4" `
+  --audio "..\outputs\voice\S011\s011_stark_stark_dialogue_v4_ja_20260603_102959.wav" `
   --start-sec 0.85 --tag stark_dialogue_v4_ja
 ```
 
 | Run | Output |
 |-----|--------|
-| **PixVerse** (production) | `Voice Added/..._stark_dialogue_v4_ja_pixverse_20260603T104245Z.mp4` |
-| MuseTalk (legacy A/B) | `Voice Added/..._musetalk_20260603T103635Z.mp4` |
+| **PixVerse** (production) | `Voice Added/..._stark_dialogue_v4_ja_pixverse_20260603_104245.mp4` |
+| MuseTalk (legacy A/B) | `Voice Added/..._musetalk_20260603_103635.mp4` |
 | LatentSync | **Failed** — `face_detection_error` on Seedance MCU |
 
 | Constant | Default |
