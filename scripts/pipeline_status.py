@@ -20,11 +20,7 @@ from pathlib import Path
 
 from fal_common import ROOT
 from artifact_paths import needs_promote, scan_shot_artifacts
-
-CHAPTER_CANDIDATES = (
-    ROOT / "Chapter-81",
-    ROOT / "Frierien-chapter081",
-)
+from chapter_paths import find_chapter_dir
 
 SHOT_ROW_RE = re.compile(
     r"^\|\s*\*\*(S\d{3}[A-Z]?)\*\*\s*\|\s*`?([^`|]+)`?\s*\|\s*([^|]+)\|\s*([^|]+)\|\s*([^|]+)\|",
@@ -88,14 +84,6 @@ class ChapterProgress:
             "with_video": self.count_with("video"),
             "shots": [s.to_dict() for s in self.shots],
         }
-
-
-def find_chapter_dir() -> Path | None:
-    for candidate in CHAPTER_CANDIDATES:
-        stage = candidate / "stage_02_shot_list.md"
-        if stage.is_file():
-            return candidate
-    return None
 
 
 def _scan_artifacts(shot_id: str) -> dict[str, tuple[bool, str]]:
@@ -230,7 +218,7 @@ def cursor_prompt_for_step(
     sid = shot_id.upper()
     sid_lower = sid.lower()
     chapter = find_chapter_dir()
-    chapter_name = chapter.name if chapter else "Chapter-81"
+    chapter_name = chapter.name if chapter else "Comic Source/Chapter-XX"
 
     if step == "panel":
         return (
@@ -348,7 +336,10 @@ def main() -> int:
         return 0
 
     if not progress.shots:
-        print("No chapter found (need Chapter-81/stage_02_shot_list.md)", flush=True)
+        print(
+            "No chapter found — add a folder under Comic Source/ with stage_02_shot_list.md",
+            flush=True,
+        )
         return 1
 
     print(f"Chapter: {progress.chapter_dir}")

@@ -12,11 +12,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from fal_common import ROOT
-
-CHAPTER_CANDIDATES = (
-    ROOT / "Chapter-81",
-    ROOT / "Frierien-chapter081",
-)
+from chapter_paths import discover_chapter_dirs, find_chapter_dir
 
 STAGE1_TITLE_RE = re.compile(r"^#\s+(.+)$", re.MULTILINE)
 STAGE1_BEAT_ROW_RE = re.compile(
@@ -114,14 +110,6 @@ class IngestSummary:
 
     def to_dict(self) -> dict:
         return asdict(self)
-
-
-def find_chapter_dir() -> Path | None:
-    for candidate in CHAPTER_CANDIDATES:
-        stage = candidate / "stage_02_shot_list.md"
-        if stage.is_file():
-            return candidate
-    return None
 
 
 def _list_chapter_jpgs(chapter_dir: Path) -> list[str]:

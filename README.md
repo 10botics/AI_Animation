@@ -2,13 +2,13 @@
 
 Personal workflow for turning ordered **manga chapter** material into **anime-style stills** and **short motion clips** using **[Fal.ai](https://fal.ai)** — with story, shot identity, and prompts kept in versioned markdown instead of ad-hoc copy-paste.
 
-The repo ships **pipeline code and docs** only. **Chapter folders** (page scans, `stage_01`–`stage_03`, QC logs) stay **local and gitignored** — create a new `Frierien-chapterNNN/` or `Chapter-NN/` per manga chapter you work on.
+The repo ships **pipeline code and docs** only. **Chapter folders** live under **`Comic Source/`** (page scans, `stage_01`–`stage_03`, QC logs) — **gitignored**; add a new `Chapter-NN/` per comic chapter you work on.
 
 ## What this repo is
 
 | Piece | Role |
 |--------|------|
-| **Stages 1–3** (local `Frierien-chapterNNN/stage_01_ingest.md`, `stage_02_shot_list.md`, `stage_03_series_bible.md`) | Canon for page order, beats, shots (**S00x**), and style notes — **not in git** |
+| **Stages 1–3** (local `Comic Source/Chapter-NNN/stage_01_ingest.md`, …) | Canon for page order, beats, shots (**S00x**), and style notes — **not in git** |
 | **`panels/eng/panel_s###.png`** | Single-panel crops used as **edit references** for Nano Banana |
 | **`scripts/fal_common.py`** | Shared **`S###_PROMPT_FLUX`** bodies (one string per shot for all backends) |
 | **`scripts/generate_s006_*.py`** | **Examples** in git — copy/adapt per shot with Cursor Agent |
@@ -16,7 +16,7 @@ The repo ships **pipeline code and docs** only. **Chapter folders** (page scans,
 | **`Tests/Final/`** | “Hero” stills you approve for defaults and I2V drivers |
 | **`docs/`** | Prompting guides, greyscale→color notes, Stage 5 handbook |
 
-**Mentor pack (not on GitHub):** run `python scripts/build_mentor_pack_zip.py` → `AI_Animation-mentor-pack.zip`. Extract into the project root (`Chapter-81/`, `Voice Reference/`, and `.env` with blank `FAL_KEY=`). Students create `panels/`, `Tests/`, and `outputs/` during the lesson.
+**Mentor pack (not on GitHub):** run `python scripts/build_mentor_pack_zip.py` → extract into project root. Creates **`Comic Source/Chapter-81/`**, `Voice Reference/`, and `.env` with blank `FAL_KEY=`. Add more chapters as sibling folders under **`Comic Source/`**. Students create `panels/`, `shots/`, and `outputs/` during the lesson.
 
 End-to-end stage intent is also summarized in [`manga-to-anime-fal-stages.plan.md`](manga-to-anime-fal-stages.plan.md).
 
@@ -70,17 +70,25 @@ Local progress board for learners — **no Streamlit account**. Read-only; copy 
 # One-click (creates .venv + installs deps on first run):
 .\Start-Studio.bat
 
+# Second instance on another port (and optional chapter):
+.\Start-Studio.bat 8502
+.\Start-Studio.bat 8502 Chapter-82
+# or double-click Start-Studio-8502.bat
+
+# Or set in .env: STUDIO_PORT=8502  and  STUDIO_CHAPTER=Chapter-82
+
 # Or manually:
-pip install -r requirements.txt
-streamlit run scripts/beginner_dashboard.py
+python scripts/start_studio.py --port 8502 --chapter Chapter-82
 ```
+
+Pick the active chapter in the **sidebar** when several folders exist under `Comic Source/`.
 
 CLI progress scan: `python scripts/pipeline_status.py --shot S006`
 
 ## Repository layout (short)
 
 ```
-Chapter-81/            # Local only — pages + stage_01–03 + stage_04 QC (gitignored)
+Comic Source/          # Local only — one folder per chapter (Chapter-81/, Chapter-82/, …)
 panels/                # Per-shot manga crops (gitignored)
 shots/                 # Per-shot production files (gitignored) — see below
 scripts/               # fal_common.py + generate_* + artifact_paths.py

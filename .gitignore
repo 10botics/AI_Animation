@@ -47,12 +47,16 @@ docs/reference/
 **/.tmp.driveupload/
 
 # =============================================================================
-# Manga / lesson content — ship via mentor pack (build_mentor_pack_zip.py), not git
+# Comic Source / lesson content — ship via mentor pack (build_mentor_pack_zip.py), not git
 # =============================================================================
 # Panel crops and any future ref/ folders
 panels/
 
-# Chapter workdirs — page scans, stage_*.md, stage_04 QC. Recreate per chapter locally.
+# Comic Source — chapter folders (gitignored except this README)
+Comic Source/**
+!Comic Source/README.md
+
+# Stray legacy chapter folders at repo root (gitignored; still discovered if stage_02 present)
 Chapter-*/
 Frierien-chapter*/
 chapter-*/
@@ -145,7 +149,7 @@ Desktop.ini
 
 # =============================================================================
 # Git tracks the skeleton only: scripts/, docs/*.md, .cursor/skills/, dashboard, etc.
-# Content pack (separate ZIP): Chapter-81/, Voice Reference/, docs/reference/
+# Content pack (separate ZIP): Comic Source/Chapter-81/, Voice Reference/, docs/reference/
 # Per-shot runners: scripts/generate_s###_*.py (except S006 examples) — local only
 # Students create during lessons: panels/, shots/, outputs/
 # =============================================================================

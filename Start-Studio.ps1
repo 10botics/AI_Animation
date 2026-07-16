@@ -1,4 +1,9 @@
 # AI Animation Studio — one-click local dashboard (no Streamlit account needed)
+param(
+    [int]$Port = 0,
+    [string]$Chapter = ""
+)
+
 Set-Location $PSScriptRoot
 
 if (-not (Test-Path ".venv\Scripts\python.exe")) {
@@ -17,9 +22,16 @@ if ($LASTEXITCODE -ne 0) {
     exit 1
 }
 
-Write-Host ""
-Write-Host "Starting AI Animation Studio — browser will open at http://localhost:8501"
-Write-Host "Press Ctrl+C in this window to stop."
-Write-Host ""
+$args = @()
+if ($Port -gt 0) { $args += "--port"; $args += $Port }
+if ($Chapter) { $args += "--chapter"; $args += $Chapter }
 
-& .\.venv\Scripts\python.exe -m streamlit run scripts\beginner_dashboard.py --server.headless true
+Write-Host ""
+if ($args.Count -gt 0) {
+    Write-Host "Starting AI Animation Studio with: $($args -join ' ')"
+} else {
+    Write-Host "Starting AI Animation Studio (port 8501, pick chapter in sidebar)..."
+    Write-Host "Examples: .\Start-Studio.ps1 -Port 8502 -Chapter Chapter-82"
+}
+& .\.venv\Scripts\python.exe scripts\start_studio.py @args
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

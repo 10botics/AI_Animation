@@ -20,10 +20,31 @@ if errorlevel 1 (
     exit /b 1
 )
 
+set "STUDIO_ARGS="
+if not "%~1"=="" set "STUDIO_ARGS=--port %~1"
+if not "%~2"=="" (
+    if defined STUDIO_ARGS (
+        set "STUDIO_ARGS=%STUDIO_ARGS% --chapter %~2"
+    ) else (
+        set "STUDIO_ARGS=--chapter %~2"
+    )
+)
+
 echo.
-echo Starting AI Animation Studio in your browser...
+if defined STUDIO_ARGS (
+    echo Starting AI Animation Studio with: %STUDIO_ARGS%
+) else (
+    echo Starting AI Animation Studio ^(port 8501, chapter from sidebar or .env^)...
+    echo Examples: Start-Studio.bat 8502
+    echo           Start-Studio.bat 8502 Chapter-82
+)
 echo Close this window to stop the dashboard.
 echo.
-".venv\Scripts\python.exe" -m streamlit run scripts\beginner_dashboard.py --server.headless true
+
+if defined STUDIO_ARGS (
+    ".venv\Scripts\python.exe" scripts\start_studio.py %STUDIO_ARGS%
+) else (
+    ".venv\Scripts\python.exe" scripts\start_studio.py
+)
 
 pause

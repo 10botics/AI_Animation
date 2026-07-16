@@ -12,6 +12,8 @@ Or double-click Start-Studio.bat at project root.
 
 from __future__ import annotations
 
+import os
+import re
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -24,7 +26,33 @@ import streamlit as st
 
 import pandas as pd
 
-from artifact_paths import ROOT, parse_media_timestamp, shot_root
+from chapter_paths import (
+    COMIC_SOURCE_DIR,
+    chapter_display_path,
+    chapter_key,
+    chapter_select_label,
+    chapter_url_value,
+    clear_chapter_discovery_cache,
+    discover_chapter_dirs,
+    find_chapter_by_key,
+    resolve_chapter_ref,
+)
+
+import pipeline_status as _pipeline_status
+
+cursor_prompt_for_step = _pipeline_status.cursor_prompt_for_step
+
+from artifact_paths import (
+    ROOT,
+    hero_lipsync,
+    hero_still,
+    hero_video,
+    hero_voice,
+    parse_media_timestamp,
+    promote_to_approved,
+    promote_voice_wip,
+    shot_root,
+)
 from character_bibles import (
     extract_one_line_summary,
     get_character,
@@ -34,13 +62,6 @@ from character_bibles import (
 )
 from ingest_summary import load_ingest_summary, shot_details_for_display
 from panel_crop import panel_eng_path, resolve_chapter_page, save_panel_crop
-import importlib
-
-import pipeline_status as _pipeline_status
-
-importlib.reload(_pipeline_status)
-cursor_prompt_for_step = _pipeline_status.cursor_prompt_for_step
-find_chapter_dir = _pipeline_status.find_chapter_dir
 
 STEP_DISPLAY = (
     ("panel", "1. Panel crop", "`panels/eng/panel_s###.png`"),
@@ -93,9 +114,14 @@ MISSING_FILTER_OPTIONS = (
 
 WIP_KINDS = ("still", "voice", "video", "lipsync", "sfx")
 
-SIDEBAR_PAGES = ("Progress", "Ingest", "Shot detail", "Characters")
+_IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".webp"}
+_VIDEO_EXTS = {".mp4", ".webm", ".mov", ".mkv"}
+_AUDIO_EXTS = {".wav", ".mp3", ".flac", ".aac"}
+
+SIDEBAR_PAGES = ("Setup", "Progress", "Ingest", "Shot detail", "Characters")
 
 PAGE_TO_URL_SLUG = {
+    "Setup": "setup",
     "Progress": "progress",
     "Ingest": "ingest",
     "Shot detail": "shot",
@@ -832,6 +858,88 @@ def _init_session_state() -> None:
         st.session_state.skip_silent_shots_nav = True
     if "character_detail_id" not in st.session_state:
         st.session_state.character_detail_id = ""
+    if "active_chapter_key" not in st.session_state:
+        st.session_state.active_chapter_key = ""
+
+
+def _on_chapter_selected() -> None:
+    prev = st.session_state.get("active_chapter_key", "")
+    selected = st.session_state.chapter_select
+    st.session_state.active_chapter_key = selected
+    if prev and prev != selected:
+        _load_chapter_progress.clear()
+        _load_ingest_summary.clear()
+        st.session_state.scan_cache_version = int(
+            st.session_state.get("scan_cache_version", 0)
+        ) + 1
+        st.session_state.pop("shot_detail_id", None)
+        st.session_state.pop("shot_detail_select", None)
+
+
+def _studio_chapter_from_env() -> str:
+    return os.environ.get("STUDIO_CHAPTER", "").strip()
+
+
+def _set_active_chapter(path: Path, chapters: list[Path]) -> None:
+    key = chapter_key(path)
+    st.session_state.active_chapter_key = key
+    st.session_state.chapter_select = key
+
+
+def _resolve_active_chapter() -> Path | None:
+    chapters = discover_chapter_dirs()
+    if not chapters:
+        return None
+    keys = [chapter_key(c) for c in chapters]
+
+    url_ref = _qp_get("chapter")
+    if url_ref:
+        hit = resolve_chapter_ref(url_ref)
+        if hit is not None:
+            _set_active_chapter(hit, chapters)
+            return hit
+
+    preferred = st.session_state.get("active_chapter_key", "")
+    if preferred in keys:
+        return find_chapter_by_key(preferred)
+
+    env_name = _studio_chapter_from_env()
+    if env_name:
+        hit = resolve_chapter_ref(env_name)
+        if hit is not None:
+            _set_active_chapter(hit, chapters)
+            return hit
+
+    _set_active_chapter(chapters[0], chapters)
+    return chapters[0]
+
+
+def _render_chapter_selector() -> Path | None:
+    chapters = discover_chapter_dirs()
+    if not chapters:
+        return None
+    keys = [chapter_key(c) for c in chapters]
+    labels = {chapter_key(c): chapter_select_label(c, chapters) for c in chapters}
+    if st.session_state.get("active_chapter_key") not in keys:
+        st.session_state.active_chapter_key = keys[0]
+    if st.session_state.get("chapter_select") not in keys:
+        st.session_state.chapter_select = st.session_state.active_chapter_key
+
+    st.markdown("**Comic chapter**")
+    st.selectbox(
+        "Comic chapter",
+        keys,
+        format_func=lambda key: labels.get(key, key),
+        key="chapter_select",
+        on_change=_on_chapter_selected,
+        label_visibility="collapsed",
+    )
+    if st.session_state.get("chapter_select") in keys:
+        st.session_state.active_chapter_key = st.session_state.chapter_select
+    active = find_chapter_by_key(st.session_state.active_chapter_key)
+    if active:
+        st.caption(f"`{chapter_display_path(active)}`")
+    return active
 
 
 def _qp_get(key: str) -> str:
@@ -845,7 +953,8 @@ def _qp_get(key: str) -> str:
 
 def _url_snapshot() -> str:
     return "|".join(
-        _qp_get(key) for key in ("page", "shot", "ingest", "preview", "character")
+        _qp_get(key)
+        for key in ("page", "shot", "ingest", "preview", "character", "chapter")
     )
 
 
@@ -880,6 +989,11 @@ def _apply_url_to_session() -> None:
         st.session_state.character_detail_id = character
         st.session_state.character_select = character
 
+    chapter_ref = _qp_get("chapter")
+    chapter_hit = resolve_chapter_ref(chapter_ref) if chapter_ref else None
+    if chapter_hit is not None:
+        _set_active_chapter(chapter_hit, discover_chapter_dirs())
+
     st.session_state._applied_url_snapshot = snap
 
 
@@ -905,7 +1019,12 @@ def _sync_session_to_url() -> None:
         if char_id:
             desired["character"] = char_id
 
-    tracked = ("page", "shot", "ingest", "preview", "character")
+    chapter_key_active = str(st.session_state.get("active_chapter_key", "")).strip()
+    chapter_hit = find_chapter_by_key(chapter_key_active) if chapter_key_active else None
+    if chapter_hit is not None:
+        desired["chapter"] = chapter_url_value(chapter_hit)
+
+    tracked = ("page", "shot", "ingest", "preview", "character", "chapter")
     if all(desired.get(key, "") == _qp_get(key) for key in tracked):
         return
 
@@ -963,16 +1082,23 @@ def _invalidate_shot_prompt(shot_id: str) -> None:
         st.session_state.pop("shot_detail_prompt_for", None)
 
 
-def _scan_chapter_live(chapter_dir: Path):
-    """Uncached filesystem scan — always reflects files written outside the dashboard."""
-    from pipeline_status import scan_chapter
+def _scan_cache_version() -> int:
+    return int(st.session_state.get("scan_cache_version", 0))
 
-    return scan_chapter(chapter_dir)
+
+def _get_chapter_progress(chapter_dir: Path):
+    """Cached filesystem scan — bump scan_cache_version via Refresh progress to rescan."""
+    return _load_chapter_progress(str(chapter_dir.resolve()), _scan_cache_version())
+
+
+def _scan_chapter_live(chapter_dir: Path):
+    """Alias for cached progress (kept for callers expecting this name)."""
+    return _get_chapter_progress(chapter_dir)
 
 
 def _reload_shots(chapter_dir: Path):
-    """Fresh pipeline scan on every fragment rerun."""
-    return _scan_chapter_live(chapter_dir).shots
+    """Fresh shot list from cached chapter progress."""
+    return _get_chapter_progress(chapter_dir).shots
 
 
 def _rel_path(path: str | Path) -> str:
@@ -1262,6 +1388,203 @@ def _render_shot_media_preview(shot_id: str, shot, t: dict[str, str]) -> None:
             _play_audio_file(audio_path)
 
 
+def _artifact_caption(path: Path) -> str:
+    model = path.parent.name
+    label = model if model not in ("wip", "approved", "qwen") else ""
+    ts = _human_timestamp(str(path))
+    bits = [b for b in (label, ts) if b]
+    return " · ".join(bits) if bits else path.name
+
+
+def _voice_speaker_from_filename(path: Path) -> str:
+    m = re.match(r"^([a-z]+)", path.stem, re.I)
+    return (m.group(1) if m else path.stem.split("_")[0]).lower()
+
+
+def _promote_wip(shot_id: str, kind: str, src_str: str, speaker: str = "") -> None:
+    src = Path(src_str)
+    sid = shot_id.upper()
+    if not src.is_file():
+        st.session_state[f"promote_err_{sid}"] = f"File not found: {src.name}"
+        return
+    try:
+        if kind == "voice":
+            sp = (speaker or _voice_speaker_from_filename(src)).strip().lower()
+            if not sp:
+                raise ValueError("Could not infer voice speaker from filename")
+            dest = promote_voice_wip(src, sid, sp)
+        else:
+            dest = promote_to_approved(src, sid, kind)
+    except Exception as exc:
+        st.session_state[f"promote_err_{sid}"] = str(exc)
+        return
+    st.session_state.pop(f"promote_err_{sid}", None)
+    _refresh_progress()
+    _invalidate_shot_prompt(sid)
+    if hasattr(st, "toast"):
+        st.toast(f"Approved → {_rel_path(dest)}")
+    st.rerun()
+
+
+def _hero_path(shot_id: str, kind: str) -> Path | None:
+    lookup = {
+        "still": hero_still,
+        "video": hero_video,
+        "lipsync": hero_lipsync,
+        "voice": hero_voice,
+    }
+    fn = lookup.get(kind)
+    return fn(shot_id) if fn else None
+
+
+def _is_hero_artifact(shot_id: str, kind: str, path: Path) -> bool:
+    hero = _hero_path(shot_id, kind)
+    return hero is not None and hero.resolve() == path.resolve()
+
+
+def _render_still_browser(shot_id: str, shot) -> None:
+    wip = [p for p in _wip_files(shot_id, "still") if p.suffix.lower() in _IMAGE_EXTS]
+    approved = [p for p in _approved_files(shot_id, "still") if p.suffix.lower() in _IMAGE_EXTS]
+    if not wip and not approved:
+        st.caption("No stills yet — generate in Cursor, then **Refresh progress**.")
+        return
+
+    if approved:
+        st.markdown("**Approved still**")
+        cols = st.columns(min(len(approved), 3))
+        for i, path in enumerate(approved[:6]):
+            with cols[i % len(cols)]:
+                st.image(str(path), use_container_width=True)
+                if _is_hero_artifact(shot_id, "still", path):
+                    st.success("Active for pipeline")
+                st.caption(f"`{_rel_path(path)}`")
+
+    if wip:
+        st.markdown("**WIP stills — click Approve to copy into `still/approved/`**")
+        cols = st.columns(3)
+        for i, path in enumerate(wip):
+            with cols[i % 3]:
+                st.image(str(path), use_container_width=True)
+                st.caption(_artifact_caption(path))
+                st.caption(f"`{_rel_path(path)}`")
+                st.button(
+                    "Approve still",
+                    key=f"approve_still_{shot_id}_{path.name}_{i}",
+                    use_container_width=True,
+                    type="primary" if shot.next_step == "final" else "secondary",
+                    on_click=_promote_wip,
+                    kwargs={
+                        "shot_id": shot_id,
+                        "kind": "still",
+                        "src_str": str(path.resolve()),
+                    },
+                )
+
+
+def _render_video_browser(shot_id: str, kind: str, shot) -> None:
+    assert kind in ("video", "lipsync")
+    wip = [p for p in _wip_files(shot_id, kind) if p.suffix.lower() in _VIDEO_EXTS]
+    approved = [p for p in _approved_files(shot_id, kind) if p.suffix.lower() in _VIDEO_EXTS]
+    if not wip and not approved:
+        st.caption(f"No {kind} files yet.")
+        return
+
+    next_kind = "lipsync" if kind == "lipsync" else "video"
+    promote_step = shot.next_step == next_kind or (
+        shot.next_step == "video" and kind == "video"
+    )
+
+    for section, files, show_approve in (
+        ("Approved", approved, False),
+        ("WIP", wip, True),
+    ):
+        if not files:
+            continue
+        st.markdown(f"**{section} {kind}**")
+        for i, path in enumerate(files):
+            with st.expander(
+                f"{path.name} · {_artifact_caption(path)}",
+                expanded=(section == "WIP" and i == 0 and show_approve),
+            ):
+                if _is_hero_artifact(shot_id, kind, path):
+                    st.success("Active for pipeline")
+                _play_video_file(path)
+                if show_approve:
+                    st.button(
+                        f"Approve {kind}",
+                        key=f"approve_{kind}_{shot_id}_{path.name}_{i}",
+                        use_container_width=True,
+                        type="primary" if promote_step else "secondary",
+                        on_click=_promote_wip,
+                        kwargs={
+                            "shot_id": shot_id,
+                            "kind": kind,
+                            "src_str": str(path.resolve()),
+                        },
+                    )
+
+
+def _render_voice_browser(shot_id: str, shot) -> None:
+    wip = [p for p in _wip_files(shot_id, "voice") if p.suffix.lower() in _AUDIO_EXTS]
+    approved = [p for p in _approved_files(shot_id, "voice") if p.suffix.lower() in _AUDIO_EXTS]
+    if not wip and not approved:
+        st.caption("No voice files yet.")
+        return
+
+    for section, files, show_approve in (
+        ("Approved", approved, False),
+        ("WIP", wip, True),
+    ):
+        if not files:
+            continue
+        st.markdown(f"**{section} voice**")
+        for i, path in enumerate(files):
+            speaker = _voice_speaker_from_filename(path)
+            with st.expander(f"{speaker} · {path.name}", expanded=(section == "WIP" and i == 0)):
+                if _is_hero_artifact(shot_id, "voice", path):
+                    st.success("Active for pipeline")
+                _play_audio_file(path)
+                st.caption(f"Speaker: **{speaker}**")
+                if show_approve:
+                    st.button(
+                        "Approve voice",
+                        key=f"approve_voice_{shot_id}_{path.name}_{i}",
+                        use_container_width=True,
+                        type="primary" if shot.next_step == "voice" else "secondary",
+                        on_click=_promote_wip,
+                        kwargs={
+                            "shot_id": shot_id,
+                            "kind": "voice",
+                            "src_str": str(path.resolve()),
+                            "speaker": speaker,
+                        },
+                    )
+
+
+def _render_browse_and_approve(shot_id: str, shot) -> None:
+    st.subheader("Browse & approve")
+    st.caption(
+        "Preview WIP files here and **Approve** to copy into `approved/` — "
+        "no need to hunt folders in the project tree."
+    )
+    err = st.session_state.get(f"promote_err_{shot_id.upper()}")
+    if err:
+        st.error(err)
+
+    tabs = st.tabs(["Stills", "Video", "Lip-sync", "Voice"])
+    with tabs[0]:
+        _render_still_browser(shot_id, shot)
+    with tabs[1]:
+        _render_video_browser(shot_id, "video", shot)
+    with tabs[2]:
+        _render_video_browser(shot_id, "lipsync", shot)
+    with tabs[3]:
+        if not getattr(shot, "has_dialogue", True):
+            st.caption("Silent shot — voice step skipped.")
+        else:
+            _render_voice_browser(shot_id, shot)
+
+
 def _wip_counts(shot_id: str) -> dict[str, int]:
     return {kind: len(_wip_files(shot_id, kind)) for kind in WIP_KINDS}
 
@@ -1336,12 +1659,13 @@ def _filter_shots(shots, filter_key: str):
 
 
 INGEST_SUMMARY_SCHEMA = 5  # bump when IngestSummary fields change (invalidates Streamlit cache)
+SETUP_REPORT_SCHEMA = 1  # bump when SetupCheck fields change (invalidates Streamlit cache)
 
 
 @st.cache_data(show_spinner=False)
 def _load_chapter_progress(chapter_dir: str, _cache_version: int):
     """Cached filesystem scan — bump _cache_version via Refresh progress to rescan."""
-    from pipeline_status import ChapterProgress, scan_chapter
+    from pipeline_status import scan_chapter
 
     return scan_chapter(Path(chapter_dir))
 
@@ -1349,19 +1673,31 @@ def _load_chapter_progress(chapter_dir: str, _cache_version: int):
 @st.cache_data(show_spinner=False)
 def _load_ingest_summary(chapter_dir: str, _cache_version: int, _schema: int = INGEST_SUMMARY_SCHEMA):
     """Cached ingest parse — bump _cache_version via Refresh progress to rescan."""
-    return load_ingest_summary(Path(chapter_dir))
+    progress = _load_chapter_progress(chapter_dir, _cache_version)
+    return load_ingest_summary(Path(chapter_dir), shots=progress.shots)
+
+
+@st.cache_data(show_spinner=False)
+def _load_setup_report(chapter_key: str, _cache_version: int, _schema: int = SETUP_REPORT_SCHEMA):
+    from setup_status import scan_setup
+
+    chapter = find_chapter_by_key(chapter_key) if chapter_key else None
+    return scan_setup(chapter)
 
 
 def _refresh_progress() -> None:
     """Rescan disk without changing the current page, shot, or tab."""
-    st.session_state.scan_cache_version = int(st.session_state.get("scan_cache_version", 0)) + 1
+    st.session_state.scan_cache_version = _scan_cache_version() + 1
+    clear_chapter_discovery_cache()
     _load_chapter_progress.clear()
     _load_ingest_summary.clear()
+    _load_setup_report.clear()
     if hasattr(st, "toast"):
         st.toast("Progress refreshed")
 
 
 NAV_ITEMS = (
+    ("Setup", "nav_setup"),
     ("Progress", "nav_progress"),
     ("Ingest", "nav_ingest"),
     ("Shot detail", "nav_shot_detail"),
@@ -1387,6 +1723,7 @@ def _render_sidebar_menu(t: dict[str, str]) -> None:
 
     active = st.session_state.studio_page_radio
     rules = [
+        "section[data-testid='stSidebar'] .st-key-nav_setup, "
         "section[data-testid='stSidebar'] .st-key-nav_progress, "
         "section[data-testid='stSidebar'] .st-key-nav_ingest, "
         "section[data-testid='stSidebar'] .st-key-nav_shot_detail, "
@@ -2320,7 +2657,7 @@ def _render_shot_page(shots, t: dict[str, str], chapter_dir: Path) -> None:
             if not ok:
                 st.caption(hint)
                 if key == "final" and _step_ok(shot, "still"):
-                    st.caption("WIP still on disk — copy the best WIP into `still/approved/` after QC.")
+                    st.caption("WIP still on disk — pick one in **Browse & approve** below.")
             elif key in WIP_KINDS and wip_counts.get(key, 0) > 1:
                 st.caption(f"{wip_counts[key]} WIP version(s) in folder — latest shown above.")
 
@@ -2333,29 +2670,7 @@ def _render_shot_page(shots, t: dict[str, str], chapter_dir: Path) -> None:
     if not shot.panel:
         _render_panel_crop_tool(selected, shot, chapter_dir, t)
 
-    if total_wip:
-        with st.expander(f"WIP history ({total_wip} files)"):
-            for kind in WIP_KINDS:
-                files = _wip_files(selected, kind)
-                if not files:
-                    continue
-                st.markdown(f"**{kind}/wip** ({len(files)})")
-                for p in files[:8]:
-                    ts = _human_timestamp(str(p))
-                    st.markdown(f"- `{_rel_path(p)}`" + (f" · {ts}" if ts else ""))
-                if len(files) > 8:
-                    st.caption(f"… and {len(files) - 8} more under `shots/{selected}/{kind}/wip/`")
-
-    approved_kinds = [k for k in ("still", "voice", "video", "lipsync") if _approved_files(selected, k)]
-    if approved_kinds:
-        with st.expander("Approved folder"):
-            st.caption("QC-passed files live under each `approved/` folder (not a magic filename).")
-            for kind in approved_kinds:
-                files = _approved_files(selected, kind)
-                st.markdown(f"**{kind}/approved** ({len(files)})")
-                for p in files:
-                    ts = _human_timestamp(str(p))
-                    st.markdown(f"- `{_rel_path(p)}`" + (f" · {ts}" if ts else ""))
+    _render_browse_and_approve(selected, shot)
 
     st.divider()
 
@@ -2421,6 +2736,106 @@ def _render_shot_page(shots, t: dict[str, str], chapter_dir: Path) -> None:
     st.markdown(_shot_detail_button_styles_html(t, selected), unsafe_allow_html=True)
 
 
+_SETUP_STATUS_ICON = {
+    "ok": "✅",
+    "warn": "⚠️",
+    "fail": "❌",
+    "skip": "➖",
+}
+
+
+def _render_setup_page(chapter: Path | None) -> None:
+    ck = chapter_key(chapter) if chapter is not None else ""
+    report = _load_setup_report(ck, _scan_cache_version())
+    st.subheader("Setup")
+    chapter_label = chapter.name if chapter is not None else "—"
+    st.caption(
+        f"**{chapter_label}** · mentor pack and PC checks before you run Fal scripts. "
+        "Fix ❌ items first; ⚠️ are recommended."
+    )
+
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Ready", report.ok_count)
+    c2.metric("Warnings", report.warn_count)
+    c3.metric("Missing", report.fail_count)
+    c4.metric("Checks", len(report.checks))
+
+    if report.required_fail_count == 0:
+        st.success(
+            "Required setup looks good — open **Progress** or **Shot detail** to work on shots."
+        )
+    else:
+        st.error(
+            f"**{report.required_fail_count}** required item(s) still missing. "
+            "See mentor pack README or student workbook §2."
+        )
+
+    st.divider()
+
+    for group, items in report.by_group().items():
+        st.markdown(f"**{group}**")
+        rows = [
+            {
+                "": _SETUP_STATUS_ICON.get(check.status, "•"),
+                "Check": check.label,
+                "Detail": check.detail,
+                "Path": check.path_hint,
+            }
+            for check in items
+        ]
+        _theme_dataframe(rows, _get_theme())
+
+        needs_fix = [c for c in items if c.fix_hint]
+        if needs_fix:
+            for check in needs_fix:
+                icon = _SETUP_STATUS_ICON.get(check.status, "•")
+                with st.expander(f"{icon} How to fix: {check.label}", expanded=check.status == "fail"):
+                    st.markdown(check.fix_hint)
+                    if check.path_hint:
+                        st.caption(f"Expected path: `{check.path_hint}`")
+
+        st.markdown("")
+
+
+def _render_sidebar_how_to_use(*, chapter_ready: bool) -> None:
+    if not chapter_ready:
+        st.markdown("**Setup (once per PC)**")
+        st.markdown(
+            f"1. Add a chapter folder anywhere under the project (e.g. **`{COMIC_SOURCE_DIR.name}/Chapter-81/`**)\n"
+            "2. Each chapter needs **`stage_02_shot_list.md`** (+ mentor pack JPGs)\n"
+            "3. Copy `.env.example` → `.env` and set **`FAL_KEY`**\n"
+            "4. Restart this dashboard"
+        )
+        st.caption(
+            f"Recommended layout: `{COMIC_SOURCE_DIR / 'README.md'}`. "
+            "Legacy root `Chapter-*/` folders are picked up too when they include stage_02."
+        )
+        return
+
+    st.markdown("**Make a shot**")
+    st.markdown(
+        "1. **Shot detail** → pick **S###**\n"
+        "2. Copy the **Cursor prompt** for **Next step**\n"
+        "3. Paste into **Cursor Agent** (panel crop, still, video, voice…)\n"
+        "4. **Refresh progress** when new files land under `shots/S###/`\n"
+        "5. **Browse & approve** — preview WIP stills/clips and click **Approve** (no folder hunting)"
+    )
+    st.markdown("**Pages**")
+    st.caption(
+        "**Setup** — checklist · **Progress** — what's done · **Ingest** — story & panels · "
+        "**Shot detail** — previews & prompts · **Characters** — bibles"
+    )
+
+
+def _render_sidebar_refresh() -> None:
+    st.button(
+        "Refresh progress",
+        key="refresh_progress",
+        on_click=_refresh_progress,
+        use_container_width=True,
+    )
+
+
 def main() -> None:
     st.set_page_config(
         page_title="AI Animation Studio",
@@ -2431,43 +2846,48 @@ def main() -> None:
     _apply_url_to_session()
     _inject_theme_css(_get_theme())
 
-    chapter = find_chapter_dir()
+    chapter = _resolve_active_chapter()
     try:
-        if chapter is None:
-            with st.sidebar:
-                st.header("AI Animation Studio")
-                _render_theme_toggle()
-            st.error(
-                "Chapter folder not found. Copy **Chapter-81/** from your mentor pack into the project root."
-            )
-            _inject_theme_css(_get_theme())
-            return
-
         with st.sidebar:
             st.header("AI Animation Studio")
             _render_theme_toggle()
             _render_sidebar_menu(_get_theme())
             st.divider()
+            if chapter is not None:
+                chapter = _render_chapter_selector() or chapter
+            else:
+                st.caption("No chapter folder yet — use **Setup** tab.")
+            st.divider()
             st.markdown("**How to use**")
-            st.markdown(
-                "1. **Progress** — `shots/S###/` pipeline files\n"
-                "2. **Ingest** — Stages 1–3 chapter summary\n"
-                "3. **Shot detail** — paths, previews, Cursor prompt\n"
-                "4. **Characters** — appearance & personality bibles\n"
-                "5. **Copy** the prompt → **paste** into Cursor Agent chat\n"
-                "6. Files on disk update automatically — use **Refresh progress** if a view looks stale\n"
-                "7. Promote WIP → approved: `python scripts/promote_artifact.py`"
-            )
-            st.button(
-                "Refresh progress",
-                key="refresh_progress",
-                on_click=_refresh_progress,
-                use_container_width=True,
-            )
+            _render_sidebar_how_to_use(chapter_ready=chapter is not None)
+            _render_sidebar_refresh()
 
         page = _current_page()
 
-        progress = _scan_chapter_live(chapter)
+        if page == "Setup":
+            _render_setup_page(chapter)
+            _sync_session_to_url()
+            return
+
+        if chapter is None:
+            if page == "Characters":
+                _render_characters_page()
+                _sync_session_to_url()
+                return
+            st.error(
+                "No chapter found. Add a folder with **`stage_02_shot_list.md`** — "
+                f"typically under **`{COMIC_SOURCE_DIR.name}/Chapter-81/`**, "
+                "or extract the mentor pack there. Open **Setup** for the full checklist."
+            )
+            _sync_session_to_url()
+            return
+
+        if page == "Characters":
+            _render_characters_page()
+            _sync_session_to_url()
+            return
+
+        progress = _get_chapter_progress(chapter)
         shots = progress.shots
 
         if not shots and page in ("Progress", "Shot detail"):
@@ -2476,7 +2896,7 @@ def main() -> None:
 
         if page == "Progress":
             st.caption(
-                "Read-only progress view — copy prompts into Cursor Agent to generate. "
+                f"**{chapter.name}** · read-only progress — copy prompts into Cursor Agent. "
                 "No Fal calls from this page."
             )
             finals = sum(1 for s in shots if s.final)
@@ -2490,10 +2910,8 @@ def main() -> None:
             st.divider()
             _render_progress_page(shots)
         elif page == "Ingest":
-            ingest = _load_ingest_summary(str(chapter), st.session_state.scan_cache_version)
+            ingest = _load_ingest_summary(str(chapter), _scan_cache_version())
             _render_ingest_page(ingest, shots)
-        elif page == "Characters":
-            _render_characters_page()
         else:
             _render_shot_page(shots, _get_theme(), chapter)
 

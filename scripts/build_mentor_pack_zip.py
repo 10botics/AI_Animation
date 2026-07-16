@@ -2,8 +2,8 @@
 Build a confidential mentor pack ZIP for offline handout (USB / secure share).
 
 Extract into the AI_Animation project ROOT so paths match scripts and skills:
-  Chapter-81/           manga pages + stage story files (read-only for students)
-  Voice Reference/      Qwen voice timbre clips (mentor-provided)
+  Comic Source/Chapter-81/   manga pages + stage story files
+  Voice Reference/             Qwen voice timbre clips (mentor-provided)
   docs/reference/       character portrait refs (e.g. Macht) when present
   .env                  FAL_KEY= empty — each student/mentor adds their own key
 
@@ -27,13 +27,17 @@ import zipfile
 from datetime import date
 from pathlib import Path
 
+from chapter_paths import COMIC_SOURCE_DIR, is_chapter_dir
+
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUT = ROOT / "AI_Animation-mentor-pack.zip"
 ENV_EXAMPLE = ROOT / ".env.example"
 
+CHAPTER_PACK_NAME = "Chapter-81"
+PACK_CHAPTER_ARC = f"Comic Source/{CHAPTER_PACK_NAME}"
+
 # Mentor-only assets at project root (merge on extract).
 PACK_DIRS = (
-    "Chapter-81",
     "Voice Reference",
 )
 
@@ -51,8 +55,8 @@ Extract this ZIP into your AI_Animation project ROOT (merge folders).
   Example: C:\\AI_Animation\\
 
 Included (mentor handout only):
-  Chapter-81\\          manga JPGs + stage_01–03 story files
-  Voice Reference\\      Qwen voice timbre (.wav + .txt) for Frieren, Fern, Stark
+  Comic Source\\Chapter-81\\   manga JPGs + stage_01–03 story files
+  Voice Reference\\              Qwen voice timbre (.wav + .txt) for Frieren, Fern, Stark
   docs\\reference\\      character portrait refs when shipped (e.g. Macht)
   .env                   template with FAL_KEY= blank — paste your key after extract
 
@@ -116,8 +120,18 @@ def _add_tree(zf: zipfile.ZipFile, src_dir: Path, *, arc_prefix: str) -> tuple[i
     return len(files), total_bytes
 
 
+def _chapter_source_for_pack() -> Path:
+    candidate = COMIC_SOURCE_DIR / CHAPTER_PACK_NAME
+    if is_chapter_dir(candidate):
+        return candidate
+    raise FileNotFoundError(
+        f"Chapter source not found — need `{PACK_CHAPTER_ARC}/` with stage_02_shot_list.md"
+    )
+
+
 def build_mentor_pack(*, out_path: Path) -> Path:
     missing = [d for d in PACK_DIRS if not (ROOT / d).is_dir()]
+    chapter_src = _chapter_source_for_pack()
     if missing:
         raise FileNotFoundError(
             "Missing required mentor folders at project root: "
@@ -131,6 +145,13 @@ def build_mentor_pack(*, out_path: Path) -> Path:
         zf.writestr(README_NAME, README_BODY.format(pack_date=pack_date))
         zf.writestr(".env", _mentor_env_bytes())
         print("  + .env: FAL_KEY= (empty)", flush=True)
+
+        count, nbytes = _add_tree(zf, chapter_src, arc_prefix=PACK_CHAPTER_ARC)
+        print(
+            f"  + {PACK_CHAPTER_ARC} (from {chapter_src.relative_to(ROOT)}): "
+            f"{count} files, {nbytes / (1024 * 1024):.2f} MB",
+            flush=True,
+        )
 
         for name in PACK_DIRS:
             src = ROOT / name
