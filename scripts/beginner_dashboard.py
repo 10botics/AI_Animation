@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import os
 import re
+import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -2743,6 +2744,168 @@ _SETUP_STATUS_ICON = {
     "skip": "➖",
 }
 
+# Setup fix links: check id → (nav page, ingest sub-tab)
+_SETUP_FIX_NAV: dict[str, tuple[str, str]] = {
+    "chapter": ("Ingest", "Story"),
+    "stage_01": ("Ingest", "Story"),
+    "stage_02": ("Ingest", "Files & stats"),
+    "stage_03": ("Ingest", "Files & stats"),
+    "manga_pages": ("Ingest", "Every panel"),
+    "panels_eng": ("Ingest", "Every panel"),
+    "panels_jap": ("Ingest", "Every panel"),
+}
+
+
+def _setup_path_from_hint(hint: str) -> Path | None:
+    raw = (hint or "").strip().replace("\\", "/")
+    if not raw or raw in {"ffmpeg", "requirements.txt"}:
+        return None
+    raw = raw.replace(" …", "").replace("…", "").strip()
+    if raw.endswith("/"):
+        candidate = ROOT / raw.rstrip("/")
+        return candidate if candidate.is_dir() else candidate.parent
+    candidate = ROOT / raw
+    if candidate.is_file():
+        return candidate.parent
+    if candidate.is_dir():
+        return candidate
+    parent = candidate.parent
+    if parent.is_dir() and str(parent) != str(ROOT):
+        return parent
+    top = raw.split("/")[0]
+    top_path = ROOT / top
+    return top_path if top_path.is_dir() else None
+
+
+def _setup_open_target(check, chapter: Path | None) -> Path | None:
+    cid = check.id
+    if cid in ("env_file", "fal_key", "venv", "deps", "voice_registry"):
+        return ROOT
+    if cid == "voice_reference_dir":
+        vr = ROOT / "Voice Reference"
+        return vr if vr.is_dir() else ROOT
+    if cid == "cursor_skills":
+        skills = ROOT / ".cursor" / "skills"
+        return skills if skills.is_dir() else ROOT / ".cursor"
+    if cid == "panels_eng":
+        p = ROOT / "panels" / "eng"
+        return p if p.is_dir() else ROOT / "panels"
+    if cid == "panels_jap":
+        p = ROOT / "panels" / "jap"
+        return p if p.is_dir() else ROOT / "panels"
+    if cid.startswith("char_ref_") and cid != "char_ref_none":
+        return _setup_path_from_hint(check.path_hint) or (ROOT / "docs" / "reference")
+    if cid.startswith("voice_") and cid not in ("voice_reference_dir", "voice_registry"):
+        return _setup_path_from_hint(check.path_hint) or (ROOT / "Voice Reference")
+    if chapter is not None and cid in (
+        "chapter",
+        "stage_01",
+        "stage_02",
+        "stage_03",
+        "manga_pages",
+    ):
+        return chapter
+    if cid == "chapter":
+        cs = COMIC_SOURCE_DIR / "Chapter-81"
+        if cs.is_dir():
+            return cs
+        return COMIC_SOURCE_DIR if COMIC_SOURCE_DIR.is_dir() else ROOT
+    return _setup_path_from_hint(check.path_hint)
+
+
+def _setup_nav_target(check) -> tuple[str, str] | None:
+    if check.id.startswith("char_ref_") and check.id != "char_ref_none":
+        return ("Characters", "")
+    nav = _SETUP_FIX_NAV.get(check.id)
+    if nav:
+        return nav
+    return None
+
+
+def _open_folder_in_os(folder: Path) -> None:
+    target = folder.resolve()
+    if not target.is_dir():
+        target = target.parent
+    if not target.is_dir():
+        st.session_state.setup_toast = f"Folder not found: {target}"
+        return
+    try:
+        if sys.platform == "win32":
+            os.startfile(str(target))
+        elif sys.platform == "darwin":
+            subprocess.run(["open", str(target)], check=False)
+        else:
+            subprocess.run(["xdg-open", str(target)], check=False)
+        st.session_state.setup_toast = f"Opened {target.relative_to(ROOT).as_posix()}"
+    except OSError as exc:
+        st.session_state.setup_toast = f"Could not open folder: {exc}"
+
+
+def _copy_path_to_clipboard(path: Path) -> None:
+    text = str(path.resolve())
+    try:
+        if sys.platform == "win32":
+            subprocess.run(["clip"], input=text, text=True, check=True, shell=True)
+        elif sys.platform == "darwin":
+            subprocess.run(["pbcopy"], input=text.encode("utf-8"), check=True)
+        else:
+            subprocess.run(
+                ["xclip", "-selection", "clipboard"],
+                input=text.encode("utf-8"),
+                check=True,
+            )
+        st.session_state.setup_toast = f"Copied to clipboard: {text}"
+    except (OSError, subprocess.CalledProcessError, FileNotFoundError):
+        st.session_state.setup_toast = f"Copy manually: {text}"
+
+
+def _setup_nav_callback(page: str, ingest_tab: str = "") -> None:
+    st.session_state.studio_page_radio = page
+    if ingest_tab:
+        st.session_state.ingest_main_tab = ingest_tab
+
+
+def _render_setup_fix_actions(check, chapter: Path | None) -> None:
+    open_target = _setup_open_target(check, chapter)
+    nav = _setup_nav_target(check)
+    copy_target = open_target
+    if check.id in ("env_file", "fal_key") and (ROOT / ".env").is_file():
+        copy_target = ROOT / ".env"
+
+    cols = st.columns([1, 1, 1])
+    col_idx = 0
+    if open_target is not None:
+        with cols[col_idx]:
+            st.button(
+                "Open folder",
+                key=f"setup_open_{check.id}",
+                use_container_width=True,
+                on_click=_open_folder_in_os,
+                args=(open_target,),
+            )
+        col_idx += 1
+    if copy_target is not None:
+        with cols[col_idx]:
+            st.button(
+                "Copy path",
+                key=f"setup_copy_{check.id}",
+                use_container_width=True,
+                on_click=_copy_path_to_clipboard,
+                args=(copy_target,),
+            )
+        col_idx += 1
+    if nav is not None:
+        page, ingest_tab = nav
+        label = f"Go to {page}" if not ingest_tab else f"Go to {page} → {ingest_tab}"
+        with cols[col_idx]:
+            st.button(
+                label,
+                key=f"setup_nav_{check.id}",
+                use_container_width=True,
+                on_click=_setup_nav_callback,
+                args=(page, ingest_tab),
+            )
+
 
 def _render_setup_page(chapter: Path | None) -> None:
     ck = chapter_key(chapter) if chapter is not None else ""
@@ -2770,6 +2933,12 @@ def _render_setup_page(chapter: Path | None) -> None:
             "See mentor pack README or student workbook §2."
         )
 
+    if msg := st.session_state.pop("setup_toast", ""):
+        if hasattr(st, "toast"):
+            st.toast(msg)
+        else:
+            st.caption(msg)
+
     st.divider()
 
     for group, items in report.by_group().items():
@@ -2793,6 +2962,7 @@ def _render_setup_page(chapter: Path | None) -> None:
                     st.markdown(check.fix_hint)
                     if check.path_hint:
                         st.caption(f"Expected path: `{check.path_hint}`")
+                    _render_setup_fix_actions(check, report.chapter_dir)
 
         st.markdown("")
 
@@ -2803,7 +2973,7 @@ def _render_sidebar_how_to_use(*, chapter_ready: bool) -> None:
         st.markdown(
             f"1. Add a chapter folder anywhere under the project (e.g. **`{COMIC_SOURCE_DIR.name}/Chapter-81/`**)\n"
             "2. Each chapter needs **`stage_02_shot_list.md`** (+ mentor pack JPGs)\n"
-            "3. Copy `.env.example` → `.env` and set **`FAL_KEY`**\n"
+            "3. Open **`.env`** in the project root and set **`FAL_KEY`**\n"
             "4. Restart this dashboard"
         )
         st.caption(

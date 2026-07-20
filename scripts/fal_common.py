@@ -13,7 +13,16 @@ from dotenv import load_dotenv
 
 ROOT = Path(__file__).resolve().parent.parent
 _ENV_PATH = ROOT / ".env"
-load_dotenv(_ENV_PATH, override=False)
+_ENV_LOCAL_PATH = ROOT / ".env.local"
+
+
+def load_project_env() -> None:
+    """Load `.env` (committed empty) then `.env.local` (gitignored secrets)."""
+    load_dotenv(_ENV_PATH, override=False)
+    load_dotenv(_ENV_LOCAL_PATH, override=True)
+
+
+load_project_env()
 
 # Do not subscribe to these endpoints (confirmed poor fit for this project).
 BLACKLISTED_FAL_MODEL_IDS: frozenset[str] = frozenset(

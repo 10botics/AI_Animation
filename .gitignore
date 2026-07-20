@@ -1,8 +1,9 @@
 # =============================================================================
-# Secrets — never commit keys (use .env.example as the template)
+# Secrets — `.env` is committed empty (FAL_KEY=). Never commit a real key.
+# Optional local-only overrides:
 # =============================================================================
-.env
-.env.*
+.env.local
+.env.*.local
 !.env.example
 
 # MiniMax / TTS — local voice IDs + raw reference recordings (do not commit)
@@ -99,11 +100,7 @@ AI_Animation-mentor-pack.zip
 # =============================================================================
 # Per-shot / scene-specific scripts — create locally via Cursor when working each shot
 # =============================================================================
-# Workbook examples (Stage 4 still, Stage 5 video, voice) stay in git:
 scripts/generate_s*.py
-!scripts/generate_s006_ref_edit.py
-!scripts/generate_s006_kling_i2v.py
-!scripts/generate_s006_fern_dialogue.py
 
 # Scene-specific one-offs (copy from examples when needed)
 scripts/compare_s008_frieren_voices.py
@@ -150,6 +147,6 @@ Desktop.ini
 # =============================================================================
 # Git tracks the skeleton only: scripts/, docs/*.md, .cursor/skills/, dashboard, etc.
 # Content pack (separate ZIP): Comic Source/Chapter-81/, Voice Reference/, docs/reference/
-# Per-shot runners: scripts/generate_s###_*.py (except S006 examples) — local only
+# Per-shot runners: scripts/generate_s###_*.py — local only (including S006 examples)
 # Students create during lessons: panels/, shots/, outputs/
 # =============================================================================

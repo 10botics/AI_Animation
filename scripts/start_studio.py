@@ -26,8 +26,13 @@ DASHBOARD = ROOT / "scripts" / "beginner_dashboard.py"
 DEFAULT_PORT = 8501
 
 
-def resolve_port(cli_port: int | None) -> int:
+def _load_env() -> None:
     load_dotenv(ROOT / ".env", override=False)
+    load_dotenv(ROOT / ".env.local", override=True)
+
+
+def resolve_port(cli_port: int | None) -> int:
+    _load_env()
     if cli_port is not None:
         return cli_port
     from_env = os.environ.get("STUDIO_PORT", "").strip()
@@ -37,7 +42,7 @@ def resolve_port(cli_port: int | None) -> int:
 
 
 def resolve_chapter(cli_chapter: str | None) -> str:
-    load_dotenv(ROOT / ".env", override=False)
+    _load_env()
     if cli_chapter is not None and cli_chapter.strip():
         return cli_chapter.strip()
     return os.environ.get("STUDIO_CHAPTER", "").strip()

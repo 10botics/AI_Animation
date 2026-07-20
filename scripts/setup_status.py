@@ -234,8 +234,9 @@ def scan_setup(chapter_dir: Path | None = None) -> SetupReport:
         path_hint=".env",
         fix_hint=_fix_for(
             env_status,
-            "In Cursor's file tree: **right-click** `.env.example` → **Copy** → **Paste** → "
-            "rename the copy to **`.env`** (exact name, starts with a dot). Save at project root.",
+            "Open **`.env`** in the project root and paste your key after `FAL_KEY=`, "
+            "or use **`.env.local`** (gitignored) for secrets. "
+            "Get a key at [fal.ai/dashboard/keys](https://fal.ai/dashboard/keys).",
         ),
     )
 

@@ -35,7 +35,7 @@ pip install -r requirements.txt
 copy .env.example .env
 ```
 
-Edit **`.env`** and set `FAL_KEY=` to your key. **Never commit `.env`** (it is gitignored).
+Edit **`.env`** and set `FAL_KEY=` to your key (or use **`.env.local`**, gitignored, for secrets). The repo ships **`.env`** with an empty `FAL_KEY=` line. **Do not commit real keys** — if you edit `.env` directly, leave those changes uncommitted.
 
 ## Quick start — one still (Stage 4)
 
